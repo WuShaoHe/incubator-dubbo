@@ -483,7 +483,6 @@
                                     <include>org.apache.dubbo:dubbo-metadata-definition</include>
                                     <include>org.apache.dubbo:dubbo-metadata-report-redis</include>
                                     <include>org.apache.dubbo:dubbo-metadata-report-zookeeper</include>
-                                    <include>com.google.code.gson:gson</include>
                                 </includes>
                             </artifactSet>
                             <transformers>
@@ -601,8 +600,7 @@
                                     <resource>META-INF/dubbo/internal/org.apache.dubbo.qos.command.BaseCommand
                                     </resource>
                                 </transformer>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/dubbo/internal/org.apache.dubbo.configcenter.DynamicConfigurationFactory
                                     </resource>
                                 </transformer>

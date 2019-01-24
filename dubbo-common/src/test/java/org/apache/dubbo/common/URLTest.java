@@ -16,15 +16,6 @@
  */
 package org.apache.dubbo.common;
 
-import org.apache.dubbo.common.utils.CollectionUtils;
-
-import org.junit.Test;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -33,6 +24,15 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.dubbo.common.utils.CollectionUtils;
+
+import org.junit.Test;
 
 public class URLTest {
 
@@ -124,7 +124,7 @@ public class URLTest {
         assertEquals("home/user1/router.js", url.getPath());
         assertEquals(0, url.getParameters().size());
 
-        // Caution!! 
+        // Caution!!
         url = URL.valueOf("file://home/user1/router.js");
         //                      ^^ only tow slash!
         assertEquals("file", url.getProtocol());

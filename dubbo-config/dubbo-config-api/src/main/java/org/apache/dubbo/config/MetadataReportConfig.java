@@ -16,13 +16,13 @@
  */
 package org.apache.dubbo.config;
 
-import org.apache.dubbo.common.Constants;
-import org.apache.dubbo.common.utils.StringUtils;
-import org.apache.dubbo.config.support.Parameter;
+import static org.apache.dubbo.common.Constants.PROPERTIES_CHAR_SEPERATOR;
 
 import java.util.Map;
 
-import static org.apache.dubbo.common.Constants.PROPERTIES_CHAR_SEPERATOR;
+import org.apache.dubbo.common.Constants;
+import org.apache.dubbo.common.utils.StringUtils;
+import org.apache.dubbo.config.support.Parameter;
 
 /**
  * RegistryConfig
@@ -50,6 +50,11 @@ public class MetadataReportConfig extends AbstractConfig {
     // Request timeout in milliseconds for register center
     private Integer timeout;
 
+    /**
+     * The group the metadata in . It is the same as registry
+     */
+    private String group;
+
     // Customized parameters
     private Map<String, String> parameters;
 
@@ -73,6 +78,7 @@ public class MetadataReportConfig extends AbstractConfig {
         setAddress(address);
     }
 
+    @Parameter(excluded = true)
     public String getAddress() {
         return address;
     }
@@ -159,5 +165,13 @@ public class MetadataReportConfig extends AbstractConfig {
     @Parameter(excluded = true)
     public boolean isValid() {
         return StringUtils.isNotEmpty(address);
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }

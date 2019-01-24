@@ -293,7 +293,6 @@
                                     <goal>jar</goal>
                                 </goals>
                                 <configuration>
-                                    <doclint>none</doclint>
                                     <additionalDependencies>
                                         <additionalDependency>
                                             <groupId>org.apache.logging.log4j</groupId>
@@ -315,8 +314,9 @@
                             <encoding>UTF-8</encoding>
                             <docencoding>UTF-8</docencoding>
                             <links>
-                                <link>http://docs.oracle.com/javase/7/docs/api</link>
+                                <link>http://docs.oracle.com/javase/8/docs/api</link>
                             </links>
+                            <doclint>none</doclint>
                         </configuration>
                     </plugin>
                     <plugin>

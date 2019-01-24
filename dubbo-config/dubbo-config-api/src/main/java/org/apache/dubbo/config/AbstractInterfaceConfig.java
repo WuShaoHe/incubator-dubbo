@@ -16,6 +16,18 @@
  */
 package org.apache.dubbo.config;
 
+import static org.apache.dubbo.common.config.ConfigurationUtils.parseProperties;
+import static org.apache.dubbo.common.extension.ExtensionLoader.getExtensionLoader;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.Version;
@@ -42,19 +54,6 @@ import org.apache.dubbo.rpc.ProxyFactory;
 import org.apache.dubbo.rpc.cluster.Cluster;
 import org.apache.dubbo.rpc.model.ApplicationModel;
 import org.apache.dubbo.rpc.support.MockInvoker;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.apache.dubbo.common.Constants.APPLICATION_KEY;
-import static org.apache.dubbo.common.config.ConfigurationUtils.parseProperties;
-import static org.apache.dubbo.common.extension.ExtensionLoader.getExtensionLoader;
 
 /**
  * AbstractDefaultConfig
@@ -363,7 +362,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
 
     static void appendRuntimeParameters(Map<String, String> map) {
         map.put(Constants.DUBBO_VERSION_KEY, Version.getProtocolVersion());
-        map.put(Constants.SPECIFICATION_VERSION_KEY, Version.getVersion());
+        map.put(Constants.RELEASE_KEY, Version.getVersion());
         map.put(Constants.TIMESTAMP_KEY, String.valueOf(System.currentTimeMillis()));
         if (ConfigUtils.getPid() > 0) {
             map.put(Constants.PID_KEY, String.valueOf(ConfigUtils.getPid()));
@@ -376,7 +375,6 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
             return null;
         }
         Map<String, String> map = new HashMap<String, String>();
-        map.put(APPLICATION_KEY, application.getName());
         appendParameters(map, metadataReportConfig);
         return UrlUtils.parseURL(address, map);
     }
