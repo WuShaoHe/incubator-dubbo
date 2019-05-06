@@ -17,11 +17,9 @@
 package org.apache.dubbo.registry.nacos;
 
 import org.apache.dubbo.common.URL;
+import org.apache.dubbo.registry.Registry;
 import org.apache.dubbo.registry.RegistryFactory;
-import org.apache.dubbo.registry.support.cloud.AbstractCloudNativeRegistryFactory;
-import org.apache.dubbo.registry.support.cloud.CloudServiceDiscovery;
-import org.apache.dubbo.registry.support.cloud.CloudServiceRegistry;
-import org.apache.dubbo.registry.support.cloud.ServiceInstanceFactory;
+import org.apache.dubbo.registry.support.AbstractRegistryFactory;
 
 import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.exception.NacosException;
@@ -30,8 +28,6 @@ import com.alibaba.nacos.client.naming.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import static com.alibaba.nacos.api.PropertyKeyConst.ACCESS_KEY;
@@ -46,17 +42,19 @@ import static org.apache.dubbo.common.Constants.BACKUP_KEY;
 /**
  * Nacos {@link RegistryFactory}
  *
- * @since 2.6.6
+ * @since 2.6.5
  */
-public class NacosRegistryFactory extends AbstractCloudNativeRegistryFactory {
+public class NacosRegistryFactory extends AbstractRegistryFactory {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Map<URL, NacosCloudService> nacosCloudServicesCache = new HashMap<>();
+    protected Registry createRegistry(URL url) {
+        return new NacosRegistry(url, buildNamingService(url));
+    }
 
     private NamingService buildNamingService(URL url) {
         Properties nacosProperties = buildNacosProperties(url);
-        NamingService namingService = null;
+        NamingService namingService;
         try {
             namingService = NacosFactory.createNamingService(nacosProperties);
         } catch (NacosException e) {
@@ -95,7 +93,6 @@ public class NacosRegistryFactory extends AbstractCloudNativeRegistryFactory {
         putPropertyIfAbsent(url, properties, NAMESPACE);
         putPropertyIfAbsent(url, properties, NACOS_NAMING_LOG_NAME);
         putPropertyIfAbsent(url, properties, ENDPOINT);
-        putPropertyIfAbsent(url, properties, NAMESPACE);
         putPropertyIfAbsent(url, properties, ACCESS_KEY);
         putPropertyIfAbsent(url, properties, SECRET_KEY);
         putPropertyIfAbsent(url, properties, CLUSTER_NAME);
@@ -106,27 +103,5 @@ public class NacosRegistryFactory extends AbstractCloudNativeRegistryFactory {
         if (StringUtils.isNotEmpty(propertyValue)) {
             properties.setProperty(propertyName, propertyValue);
         }
-    }
-
-    private NacosCloudService createNacosCloudService(URL url) {
-        nacosCloudServicesCache.computeIfAbsent(url, u ->
-                new NacosCloudService(buildNamingService(u))
-        );
-        return nacosCloudServicesCache.get(url);
-    }
-
-    @Override
-    protected CloudServiceRegistry createCloudServiceRegistry(URL url) {
-        return createNacosCloudService(url);
-    }
-
-    @Override
-    protected CloudServiceDiscovery createCloudServiceDiscovery(URL url) {
-        return createNacosCloudService(url);
-    }
-
-    @Override
-    protected ServiceInstanceFactory createServiceInstanceFactory(URL url) {
-        return new NacosServiceInstanceFactory();
     }
 }

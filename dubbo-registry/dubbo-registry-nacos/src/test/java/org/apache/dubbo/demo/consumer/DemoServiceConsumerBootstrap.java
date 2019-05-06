@@ -19,6 +19,7 @@ package org.apache.dubbo.demo.consumer;
 import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.apache.dubbo.demo.service.DemoService;
+
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 
@@ -43,7 +44,7 @@ public class DemoServiceConsumerBootstrap {
     public void init() throws InterruptedException {
         for (int j = 0; j < 10; j++) {
             System.out.println(demoService.sayName("小马哥（mercyblitz）"));
-//            System.out.println(restDemoService.sayName("小马哥（mercyblitz）"));
+            System.out.println(restDemoService.sayName("小马哥（mercyblitz）"));
         }
         Thread.sleep(TimeUnit.SECONDS.toMillis(5));
     }

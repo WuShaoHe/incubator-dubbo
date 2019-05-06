@@ -2,17 +2,22 @@
 
 ## 2.7.1
 
+### Notice
+
+'zkclient' extension for 'org.apache.dubbo.remoting.zookeeper.ZookeeperTransporter' is removed from Dubbo 2.7.1, and 'curator' extension becomes the default extension. If you happen to config your application to use 'zkclient' explicitly, pls. switch to use 'curator' instead.
+
 ### New Features
 
-- nacos support on 2.7 [3582](https://github.com/apache/incubator-dubbo/issues/3582)
+- service register support on nacos [#3582](https://github.com/apache/incubator-dubbo/issues/3582)
 - support consul as registry center, config center and metadata center [#983](https://github.com/apache/incubator-dubbo/issues/983)
-- etcd registry center support [#808](https://github.com/apache/incubator-dubbo/issues/808)
+- service registry support/config center support on etcd [#808](https://github.com/apache/incubator-dubbo/issues/808)
 - metrics support in dubbo 2.7.1 [#3598](https://github.com/apache/incubator-dubbo/issues/3598)
 - @Argument @Method support [#2405](https://github.com/apache/incubator-dubbo/issues/2045)
 
 ### Enhancement
 
 - [Enhancement] @EnableDubboConfigBinding annotates @Repeatable [#1770](https://github.com/apache/incubator-dubbo/issues/1770)
+- [Enhancement] Change the default behavior of @EnableDubboConfig.multiple() [#3193](https://github.com/apache/incubator-dubbo/issues/3193)
 - Should make annotation easier to use in multiple items circumstance [#3039](https://github.com/apache/incubator-dubbo/issues/3039)
 - NoSuchMethodError are thrown when add custom Filter using dubbo2.6.5 and JDK1.6 and upgrade to dubbo2.7.0 [#3570](https://github.com/apache/incubator-dubbo/issues/3570)
 - introduce dubbo-dependencies-zookeeper [#3607](https://github.com/apache/incubator-dubbo/pull/3607)
@@ -31,6 +36,7 @@
 - implement pull request #3412 on master branch [#3418](https://github.com/apache/incubator-dubbo/pull/3418)
 - enhancement for event of response (follow up for pull request #3043) [#3244](https://github.com/apache/incubator-dubbo/issues/3244)
 - bump up hessian-lite version #3423 [#3513](https://github.com/apache/incubator-dubbo/pull/3513)
+- [Dubbo-3610]make snakeyaml transitive, should we do this? [#3659](https://github.com/apache/incubator-dubbo/pull/3659)
 
 ### Bugfixes
 
@@ -63,6 +69,9 @@
 - Why does not tomcat throw an exception when `server.start` failed with a socket binding error.  [#3236](https://github.com/apache/incubator-dubbo/issues/3236)
 - No such extension org.apache.dubbo.metadata.store.MetadataReportFactory by name redis [#3514](https://github.com/apache/incubator-dubbo/issues/3514)
 - dubbo 2.7.1-SNAPSHOT NoClassDefFoundError when use springboot [#3426](https://github.com/apache/incubator-dubbo/issues/3426)
+- NPE occurs when use @Reference in junit in spring boot application [#3429](https://github.com/apache/incubator-dubbo/issues/3429)
+- When refer the same service with more than one @References(with different configs) on consumer side, only one take effect [#1306](https://github.com/apache/incubator-dubbo/issues/1306)
+- consumer always catch java.lang.reflect.UndeclaredThrowableException for the exception thrown from provider [#3386](https://github.com/apache/incubator-dubbo/issues/3386)
 - dubbo2.7.0 com.alibaba.com.caucho.hessian.io.HessianProtocolException: 'com.alibaba.dubbo.common.URL' could not be instantiated [#3342](https://github.com/apache/incubator-dubbo/issues/3342)
 - Close Resources Properly [#3473](https://github.com/apache/incubator-dubbo/issues/3473)
 - SPI entires dup by 3 times. [#2842](https://github.com/apache/incubator-dubbo/issues/2842)

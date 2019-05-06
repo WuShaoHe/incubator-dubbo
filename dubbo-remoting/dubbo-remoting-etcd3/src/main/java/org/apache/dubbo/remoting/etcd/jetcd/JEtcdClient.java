@@ -17,6 +17,7 @@
 
 package org.apache.dubbo.remoting.etcd.jetcd;
 
+import io.grpc.ManagedChannel;
 import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.logger.Logger;
@@ -185,6 +186,20 @@ public class JEtcdClient extends AbstractEtcdClient<JEtcdClient.EtcdWatcher> {
         }
     }
 
+    @Override
+    public String getKVValue(String key) {
+        return clientWrapper.getKVValue(key);
+    }
+
+    @Override
+    public boolean put(String key, String value) {
+        return clientWrapper.put(key, value);
+    }
+
+    public ManagedChannel getChannel() {
+        return clientWrapper.getChannel();
+    }
+
     public class EtcdWatcher implements StreamObserver<WatchResponse> {
 
         protected WatchGrpc.WatchStub watchStub;
@@ -220,12 +235,16 @@ public class JEtcdClient extends AbstractEtcdClient<JEtcdClient.EtcdWatcher> {
                     switch (event.getType()) {
                         case PUT: {
                             if (((service = find(event)) != null)
-                                    && safeUpdate(service, true)) modified++;
+                                    && safeUpdate(service, true)) {
+                                modified++;
+                            }
                             break;
                         }
                         case DELETE: {
                             if (((service = find(event)) != null)
-                                    && safeUpdate(service, false)) modified++;
+                                    && safeUpdate(service, false)) {
+                                modified++;
+                            }
                             break;
                         }
                         default:
@@ -233,12 +252,7 @@ public class JEtcdClient extends AbstractEtcdClient<JEtcdClient.EtcdWatcher> {
                     }
                 }
                 if (modified > 0) {
-                    notifyExecutor.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            listener.childChanged(path, new ArrayList<>(urls));
-                        }
-                    });
+                    notifyExecutor.execute(() -> listener.childChanged(path, new ArrayList<>(urls)));
                 }
 
             }
@@ -321,7 +335,9 @@ public class JEtcdClient extends AbstractEtcdClient<JEtcdClient.EtcdWatcher> {
             int len = path.length(), index = len, count = 0;
             if (key.length() >= index) {
                 for (; (index = key.indexOf(Constants.PATH_SEPARATOR, index)) != -1; ++index) {
-                    if (count++ > 1) break;
+                    if (count++ > 1) {
+                        break;
+                    }
                 }
             }
 
@@ -339,15 +355,21 @@ public class JEtcdClient extends AbstractEtcdClient<JEtcdClient.EtcdWatcher> {
         }
 
         private List<String> filterChildren(List<String> children) {
-            if (children == null) return Collections.emptyList();
-            if (children.size() <= 0) return children;
+            if (children == null) {
+                return Collections.emptyList();
+            }
+            if (children.size() <= 0) {
+                return children;
+            }
             final int len = path.length();
             return children.stream().parallel()
                     .filter(child -> {
                         int index = len, count = 0;
                         if (child.length() > len) {
                             for (; (index = child.indexOf(Constants.PATH_SEPARATOR, index)) != -1; ++index) {
-                                if (count++ > 1) break;
+                                if (count++ > 1) {
+                                    break;
+                                }
                             }
                         }
                         return count == 1;

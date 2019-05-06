@@ -16,9 +16,6 @@
  */
 package org.apache.dubbo.config.spring.beans.factory.annotation;
 
-import static org.apache.dubbo.config.spring.beans.factory.annotation.AnnotationBeanNameBuilderTest.GROUP;
-import static org.apache.dubbo.config.spring.beans.factory.annotation.AnnotationBeanNameBuilderTest.VERSION;
-
 import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.dubbo.config.spring.api.DemoService;
@@ -29,6 +26,9 @@ import org.junit.Test;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.util.ReflectionUtils;
+
+import static org.apache.dubbo.config.spring.beans.factory.annotation.AnnotationBeanNameBuilderTest.GROUP;
+import static org.apache.dubbo.config.spring.beans.factory.annotation.AnnotationBeanNameBuilderTest.VERSION;
 
 /**
  * {@link AnnotationBeanNameBuilder} Test
@@ -81,4 +81,3 @@ public class AnnotationBeanNameBuilderTest {
     }
 
 }
-

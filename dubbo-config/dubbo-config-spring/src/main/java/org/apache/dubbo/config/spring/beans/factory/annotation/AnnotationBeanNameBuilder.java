@@ -16,19 +16,19 @@
  */
 package org.apache.dubbo.config.spring.beans.factory.annotation;
 
-import static org.apache.dubbo.common.Constants.CONSUMERS_CATEGORY;
-import static org.apache.dubbo.common.Constants.DEFAULT_PROTOCOL;
-import static org.apache.dubbo.common.Constants.PROVIDERS_CATEGORY;
-import static org.apache.dubbo.config.spring.util.AnnotationUtils.resolveInterfaceName;
-import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
-import static org.springframework.util.StringUtils.hasText;
-
 import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.dubbo.registry.Registry;
 
 import org.springframework.core.env.Environment;
+
+import static org.apache.dubbo.common.Constants.CONSUMERS_CATEGORY;
+import static org.apache.dubbo.common.Constants.DEFAULT_PROTOCOL;
+import static org.apache.dubbo.common.Constants.PROVIDERS_CATEGORY;
+import static org.apache.dubbo.config.spring.util.AnnotationUtils.resolveInterfaceName;
+import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * The Bean Name Builder for the annotations {@link Service} and {@link Reference}
