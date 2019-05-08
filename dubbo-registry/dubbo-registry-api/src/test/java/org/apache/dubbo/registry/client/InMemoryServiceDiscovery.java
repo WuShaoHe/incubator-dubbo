@@ -14,9 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.registry.client.discovery;
+package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.registry.client.ServiceInstance;
+import org.apache.dubbo.registry.client.event.DefaultServiceDiscoveryChangeEventNotifier;
+import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeEventNotifier;
+import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeListener;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -33,6 +35,7 @@ public class InMemoryServiceDiscovery implements ServiceDiscovery {
 
     private Map<String, List<ServiceInstance>> repository = new HashMap<>();
 
+    private ServiceDiscoveryChangeEventNotifier notifier = new DefaultServiceDiscoveryChangeEventNotifier();
 
     @Override
     public Set<String> getServices() {
@@ -42,6 +45,11 @@ public class InMemoryServiceDiscovery implements ServiceDiscovery {
     @Override
     public List<ServiceInstance> getInstances(String serviceName) throws NullPointerException {
         return repository.computeIfAbsent(serviceName, s -> new LinkedList<>());
+    }
+
+    @Override
+    public void registerListener(String serviceName, ServiceDiscoveryChangeListener listener) {
+        notifier.addListener(serviceName, listener);
     }
 
     protected InMemoryServiceDiscovery addServiceInstance(ServiceInstance serviceInstance) {

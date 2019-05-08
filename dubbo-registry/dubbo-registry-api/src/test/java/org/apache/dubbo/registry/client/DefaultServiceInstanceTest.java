@@ -14,9 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.registry.client.discovery;
-
-import org.apache.dubbo.registry.client.DefaultServiceInstance;
+package org.apache.dubbo.registry.client;
 
 import org.junit.jupiter.api.Test;
 

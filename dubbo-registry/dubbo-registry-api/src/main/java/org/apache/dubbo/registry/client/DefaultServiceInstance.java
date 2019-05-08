@@ -27,6 +27,8 @@ import java.util.Objects;
  */
 public class DefaultServiceInstance implements ServiceInstance {
 
+    private final String id;
+
     private final String serviceName;
 
     private final String host;
@@ -39,10 +41,20 @@ public class DefaultServiceInstance implements ServiceInstance {
 
     private Map<String, String> metadata = new HashMap<>();
 
-    public DefaultServiceInstance(String serviceName, String host, int port) {
+    public DefaultServiceInstance(String id, String serviceName, String host, int port) {
+        this.id = id;
         this.serviceName = serviceName;
         this.host = host;
         this.port = port;
+    }
+
+    public DefaultServiceInstance(String serviceName, String host, int port) {
+        this(null, serviceName, host, port);
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -93,6 +105,7 @@ public class DefaultServiceInstance implements ServiceInstance {
         if (!(o instanceof DefaultServiceInstance)) return false;
         DefaultServiceInstance that = (DefaultServiceInstance) o;
         return getPort() == that.getPort() &&
+                Objects.equals(getId(), that.getId()) &&
                 Objects.equals(getServiceName(), that.getServiceName()) &&
                 Objects.equals(getHost(), that.getHost()) &&
                 Objects.equals(getMetadata(), that.getMetadata());
@@ -100,13 +113,14 @@ public class DefaultServiceInstance implements ServiceInstance {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getServiceName(), getHost(), getPort(), getMetadata());
+        return Objects.hash(getId(), getServiceName(), getHost(), getPort(), getMetadata());
     }
 
     @Override
     public String toString() {
         return "DefaultServiceInstance{" +
-                "serviceName='" + serviceName + '\'' +
+                "id='" + id + '\'' +
+                ", serviceName='" + serviceName + '\'' +
                 ", host='" + host + '\'' +
                 ", port=" + port +
                 ", enabled=" + enabled +

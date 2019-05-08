@@ -14,49 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.registry.client.discovery;
+package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.registry.client.DefaultServiceInstance;
-import org.apache.dubbo.registry.client.Page;
-import org.apache.dubbo.registry.client.ServiceInstance;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Integer.MAX_VALUE;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link CompositeServiceDiscovery} Test
+ * {@link ServiceDiscovery} Test case
  *
  * @since 2.7.2
  */
-public class CompositeServiceDiscoveryTest {
+public class ServiceDiscoveryTest {
 
     private InMemoryServiceDiscovery instance = new InMemoryServiceDiscovery();
 
-    private CompositeServiceDiscovery serviceDiscovery;
-
-    @BeforeEach
-    public void init() {
-        serviceDiscovery = new CompositeServiceDiscovery(instance);
-    }
-
     @Test
     public void testToString() {
-        assertEquals("CompositeServiceDiscovery [composite : [InMemoryServiceDiscovery]]", serviceDiscovery.toString());
+        assertEquals("InMemoryServiceDiscovery", instance.toString());
     }
 
     @Test
     public void testGetPriority() {
-        assertEquals(MIN_VALUE, serviceDiscovery.getPriority());
+        assertEquals(MAX_VALUE, instance.getPriority());
     }
 
     @Test
@@ -88,7 +76,7 @@ public class CompositeServiceDiscoveryTest {
         // requestSize > total elements
         int requestSize = 5;
 
-        Page<ServiceInstance> page = serviceDiscovery.getInstances("A", offset, requestSize);
+        Page<ServiceInstance> page = instance.getInstances("A", offset, requestSize);
         assertEquals(0, page.getRequestOffset());
         assertEquals(5, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
@@ -102,7 +90,7 @@ public class CompositeServiceDiscoveryTest {
         // requestSize < total elements
         requestSize = 2;
 
-        page = serviceDiscovery.getInstances("A", offset, requestSize);
+        page = instance.getInstances("A", offset, requestSize);
         assertEquals(0, page.getRequestOffset());
         assertEquals(2, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
@@ -114,7 +102,7 @@ public class CompositeServiceDiscoveryTest {
         }
 
         offset = 1;
-        page = serviceDiscovery.getInstances("A", offset, requestSize);
+        page = instance.getInstances("A", offset, requestSize);
         assertEquals(1, page.getRequestOffset());
         assertEquals(2, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
@@ -126,7 +114,7 @@ public class CompositeServiceDiscoveryTest {
         }
 
         offset = 2;
-        page = serviceDiscovery.getInstances("A", offset, requestSize);
+        page = instance.getInstances("A", offset, requestSize);
         assertEquals(2, page.getRequestOffset());
         assertEquals(2, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
@@ -134,7 +122,7 @@ public class CompositeServiceDiscoveryTest {
         assertTrue(page.hasData());
 
         offset = 3;
-        page = serviceDiscovery.getInstances("A", offset, requestSize);
+        page = instance.getInstances("A", offset, requestSize);
         assertEquals(3, page.getRequestOffset());
         assertEquals(2, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
@@ -142,7 +130,7 @@ public class CompositeServiceDiscoveryTest {
         assertFalse(page.hasData());
 
         offset = 5;
-        page = serviceDiscovery.getInstances("A", offset, requestSize);
+        page = instance.getInstances("A", offset, requestSize);
         assertEquals(5, page.getRequestOffset());
         assertEquals(2, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
@@ -170,7 +158,7 @@ public class CompositeServiceDiscoveryTest {
         // requestSize > total elements
         int requestSize = 5;
 
-        Page<ServiceInstance> page = serviceDiscovery.getInstances("A", offset, requestSize, true);
+        Page<ServiceInstance> page = instance.getInstances("A", offset, requestSize, true);
         assertEquals(0, page.getRequestOffset());
         assertEquals(5, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
@@ -185,7 +173,7 @@ public class CompositeServiceDiscoveryTest {
         requestSize = 2;
 
         offset = 1;
-        page = serviceDiscovery.getInstances("A", offset, requestSize, true);
+        page = instance.getInstances("A", offset, requestSize, true);
         assertEquals(1, page.getRequestOffset());
         assertEquals(2, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
@@ -197,7 +185,7 @@ public class CompositeServiceDiscoveryTest {
         }
 
         offset = 2;
-        page = serviceDiscovery.getInstances("A", offset, requestSize, true);
+        page = instance.getInstances("A", offset, requestSize, true);
         assertEquals(2, page.getRequestOffset());
         assertEquals(2, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
@@ -205,7 +193,7 @@ public class CompositeServiceDiscoveryTest {
         assertFalse(page.hasData());
 
         offset = 3;
-        page = serviceDiscovery.getInstances("A", offset, requestSize, true);
+        page = instance.getInstances("A", offset, requestSize, true);
         assertEquals(3, page.getRequestOffset());
         assertEquals(2, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
@@ -213,11 +201,13 @@ public class CompositeServiceDiscoveryTest {
         assertFalse(page.hasData());
 
         offset = 5;
-        page = serviceDiscovery.getInstances("A", offset, requestSize, true);
+        page = instance.getInstances("A", offset, requestSize, true);
         assertEquals(5, page.getRequestOffset());
         assertEquals(2, page.getRequestSize());
         assertEquals(3, page.getTotalSize());
         assertEquals(0, page.getData().size());
         assertFalse(page.hasData());
     }
+
+
 }

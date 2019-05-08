@@ -14,11 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.registry.client.discovery;
+package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.registry.client.DefaultPage;
-import org.apache.dubbo.registry.client.Page;
-import org.apache.dubbo.registry.client.ServiceInstance;
+import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -160,6 +158,14 @@ public interface ServiceDiscovery extends Comparable<ServiceDiscovery> {
         }
         return unmodifiableMap(instances);
     }
+
+    /**
+     * Register {@link ServiceDiscoveryChangeListener the service chagne event listener}
+     *
+     * @param serviceName the name of service that is required to be listened
+     * @param listener    {@link ServiceDiscoveryChangeListener the service change event listener}
+     */
+    void registerListener(String serviceName, ServiceDiscoveryChangeListener listener);
 
     /**
      * The priority of current {@link ServiceDiscovery}

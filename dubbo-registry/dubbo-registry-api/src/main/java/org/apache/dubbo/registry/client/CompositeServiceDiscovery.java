@@ -14,11 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.registry.client.discovery;
+package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.registry.client.DefaultPage;
-import org.apache.dubbo.registry.client.Page;
-import org.apache.dubbo.registry.client.ServiceInstance;
+import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeListener;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -98,6 +96,13 @@ public class CompositeServiceDiscovery implements ServiceDiscovery {
         page.setTotalSize(totalElements);
         page.setData(serviceInstances);
         return page;
+    }
+
+    @Override
+    public void registerListener(String serviceName, ServiceDiscoveryChangeListener listener) {
+        for (ServiceDiscovery serviceDiscovery : serviceDiscoveries) {
+            serviceDiscovery.registerListener(serviceName, listener);
+        }
     }
 
     @Override

@@ -25,6 +25,7 @@ import org.apache.dubbo.rpc.model.ProviderModel;
 import org.apache.dubbo.rpc.protocol.dubbo.support.DemoService;
 import org.apache.dubbo.rpc.protocol.dubbo.support.DemoServiceImpl;
 import org.apache.dubbo.rpc.protocol.dubbo.support.ProtocolUtils;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,7 @@ public class SelectTelnetHandlerTest {
             }
         }
 
-        ApplicationModel.reset();
+        ApplicationModel.getDefaultApplicationModel().reset();
     }
 
     @AfterEach

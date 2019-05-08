@@ -17,30 +17,50 @@
 package org.apache.dubbo.registry.client;
 
 /**
- * The common interface to register and deregister for a service registry
+ * The common interface to register and unregister for a service registry
  *
  * @since 2.7.2
  */
 public interface ServiceRegistry {
 
     /**
+     * A human-readable description of the implementation
+     *
+     * @return The description.
+     */
+    String toString();
+
+    /**
      * Registers an instance of {@link ServiceInstance}.
      *
      * @param serviceInstance an instance of {@link ServiceInstance} to be registered
-     * @return If success, return <code>true</code>, or <code>false</code>
+     * @throws RuntimeException if failed
      */
-    boolean register(ServiceInstance serviceInstance);
+    void register(ServiceInstance serviceInstance) throws RuntimeException;
 
     /**
-     * Deregisters an instance of {@link ServiceInstance}.
+     * Updates the registered {@link ServiceInstance}.
+     *
+     * @param serviceInstance the registered {@link ServiceInstance}
+     * @throws RuntimeException if failed
+     */
+    void update(ServiceInstance serviceInstance) throws RuntimeException;
+
+    /**
+     * Unregisters an instance of {@link ServiceInstance}.
      *
      * @param serviceInstance an instance of {@link ServiceInstance} to be deregistered
-     * @return If success, return <code>true</code>, or <code>false</code>
+     * @throws RuntimeException if failed
      */
-    void deregister(ServiceInstance serviceInstance);
+    void unregister(ServiceInstance serviceInstance) throws RuntimeException;
 
     /**
-     * Closes the ServiceRegistry. This is a lifecycle method.
+     * Starts the ServiceRegistry. This is a lifecycle method.
      */
-    void close();
+    void start();
+
+    /**
+     * Stops the ServiceRegistry. This is a lifecycle method.
+     */
+    void stop();
 }

@@ -27,7 +27,14 @@ import java.util.Map;
 public interface ServiceInstance {
 
     /**
-     * The name of service that current instance belongs to
+     * The id of the registered service instance.
+     *
+     * @return nullable
+     */
+    String getId();
+
+    /**
+     * The name of service that current instance belongs to.
      *
      * @return non-null
      */
