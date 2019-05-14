@@ -23,8 +23,8 @@ import java.util.List;
 /**
  * A framework interface of Dubbo Metadata Service defines the contract of Dubbo Services registartion and subscription
  * between Dubbo service providers and its consumers. The implementationwill be exported as a normal Dubbo service that
- * the clients would subscribe, whose version comes from the {@link #getVersion()} method and group gets from
- * {@link #currentServiceName()}, that means, The different Dubbo service(application) will export the different
+ * the clients would subscribe, whose version comes from the {@link #version()} method and group gets from
+ * {@link #serviceName()}, that means, The different Dubbo service(application) will export the different
  * {@link DubboMetadataService} that persists all the exported and subscribed metadata, they are present by
  * {@link #getExportedURLs()} and {@link #getSubscribedURLs()} respectively. What's more, {@link DubboMetadataService}
  * also providers the fine-grain methods for the precise queries.
@@ -42,7 +42,7 @@ public interface DubboMetadataService {
     /**
      * The value of All service instances
      */
-    String ALL_SERVICE_INTERFACE = "*";
+    String ALL_SERVICE_INTERFACES = "*";
 
     /**
      * The contract version of {@link DubboMetadataService}, the future update must make sure compatible.
@@ -54,15 +54,15 @@ public interface DubboMetadataService {
      *
      * @return non-null
      */
-    String currentServiceName();
+    String serviceName();
 
     /**
-     * The version of {@link DubboMetadataService} that always equals {@link #VERSION}
+     * Gets the version of {@link DubboMetadataService} that always equals {@link #VERSION}
      *
      * @return non-null
      * @see #VERSION
      */
-    default String getVersion() {
+    default String version() {
         return VERSION;
     }
 
@@ -79,7 +79,7 @@ public interface DubboMetadataService {
      * @return non-null read-only {@link List}
      */
     default List<String> getExportedURLs() {
-        return getExportedURLs(ALL_SERVICE_INTERFACE);
+        return getExportedURLs(ALL_SERVICE_INTERFACES);
     }
 
     /**

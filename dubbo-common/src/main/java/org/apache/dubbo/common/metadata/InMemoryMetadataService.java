@@ -74,7 +74,7 @@ public class InMemoryMetadataService implements DubboMetadataService {
     }
 
     @Override
-    public String currentServiceName() {
+    public String serviceName() {
         return serviceName;
     }
 
@@ -85,10 +85,9 @@ public class InMemoryMetadataService implements DubboMetadataService {
 
     @Override
     public List<String> getExportedURLs(String serviceInterface, String group, String version) {
-        if (ALL_SERVICE_NAMES.equals(serviceInterface)) {
+        if (ALL_SERVICE_INTERFACES.equals(serviceInterface)) {
             return getAllServiceURLs(exportedServiceURLs);
         }
-
         String serviceKey = buildKey(serviceInterface, group, version);
         return unmodifiableList(getServiceURLs(exportedServiceURLs, serviceKey));
     }
@@ -112,7 +111,11 @@ public class InMemoryMetadataService implements DubboMetadataService {
     protected boolean addURL(Map<String, List<String>> serviceURLs, URL url) {
         String serviceKey = url.getServiceKey();
         List<String> urls = getServiceURLs(serviceURLs, serviceKey);
-        return urls.add(url.toFullString());
+        String urlString = url.toFullString();
+        if (!urls.contains(urlString)) {
+            return urls.add(url.toFullString());
+        }
+        return false;
     }
 
     protected boolean removeURL(Map<String, List<String>> serviceURLs, URL url) {
@@ -132,5 +135,4 @@ public class InMemoryMetadataService implements DubboMetadataService {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
-
 }
