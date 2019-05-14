@@ -32,7 +32,7 @@ import static java.util.Collections.unmodifiableList;
 import static org.apache.dubbo.common.URL.buildKey;
 
 /**
- * The {@link DubboMetadataService} implementation stores the metadata of Dubbo services in memory when they exported, and
+ * The {@link DubboMetadataService} implementation stores the metadata of Dubbo services in memory when they exported
  *
  * @since 2.7.2
  */
