@@ -24,18 +24,22 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.apache.dubbo.common.Constants.GROUP_KEY;
+import static org.apache.dubbo.common.Constants.PROTOCOL_KEY;
 import static org.apache.dubbo.common.Constants.VERSION_KEY;
 import static org.apache.dubbo.common.URL.valueOf;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link InMemoryMetadataService} Test
+ * {@link AbstractLocalMetadataService} Test
  *
  * @since 2.7.2
  */
-public class InMemoryMetadataServiceTest {
+public class AbstractLocalMetadataServiceTest {
 
-    private InMemoryMetadataService inMemoryMetadataService = new InMemoryMetadataService("test");
+    private AbstractLocalMetadataService metadataService = new AbstractLocalMetadataService("test") {
+    };
 
     private static final String TEST_SERVICE = "org.apache.dubbo.test.TestService";
 
@@ -43,55 +47,62 @@ public class InMemoryMetadataServiceTest {
     private static final URL REST_BASE_URL = valueOf("rest://127.0.0.1:20880/" + TEST_SERVICE);
     private static final URL BASE_URL_GROUP = BASE_URL.addParameter(GROUP_KEY, "test");
     private static final URL BASE_URL_GROUP_AND_VERSION = BASE_URL_GROUP.addParameter(VERSION_KEY, "1.0.0");
+    private static final URL BASE_URL_GROUP_AND_VERSION_AND_PROTOCOL = BASE_URL_GROUP_AND_VERSION.addParameter(PROTOCOL_KEY, "rest");
 
     @Test
     public void testServiceName() {
-        assertEquals("test", inMemoryMetadataService.serviceName());
+        assertEquals("test", metadataService.serviceName());
     }
 
     @Test
     public void testVersion() {
-        assertEquals("1.0.0", DubboMetadataService.VERSION);
-        assertEquals("1.0.0", inMemoryMetadataService.version());
+        assertEquals("1.0.0", MetadataService.VERSION);
+        assertEquals("1.0.0", metadataService.version());
     }
 
     @Test
     public void testGetExportedURLs() {
 
-        assertTrue(inMemoryMetadataService.exportURL(BASE_URL));
-        List<String> exportedURLs = inMemoryMetadataService.getExportedURLs(TEST_SERVICE);
+        assertTrue(metadataService.exportURL(BASE_URL));
+        List<String> exportedURLs = metadataService.getExportedURLs(TEST_SERVICE);
         assertEquals(1, exportedURLs.size());
         assertEquals(asList(BASE_URL.toFullString()), exportedURLs);
-        assertTrue(inMemoryMetadataService.unexportURL(BASE_URL));
+        assertTrue(metadataService.unexportURL(BASE_URL));
 
-        assertTrue(inMemoryMetadataService.exportURL(BASE_URL));
-        assertFalse(inMemoryMetadataService.exportURL(BASE_URL));
+        assertTrue(metadataService.exportURL(BASE_URL));
+        assertFalse(metadataService.exportURL(BASE_URL));
 
-        assertTrue(inMemoryMetadataService.exportURL(BASE_URL_GROUP));
-        assertTrue(inMemoryMetadataService.exportURL(BASE_URL_GROUP_AND_VERSION));
+        assertTrue(metadataService.exportURL(BASE_URL_GROUP));
+        assertTrue(metadataService.exportURL(BASE_URL_GROUP_AND_VERSION));
 
-        exportedURLs = inMemoryMetadataService.getExportedURLs(TEST_SERVICE);
+        exportedURLs = metadataService.getExportedURLs(TEST_SERVICE);
         assertEquals(asList(BASE_URL.toFullString()), exportedURLs);
         assertEquals(asList(
                 BASE_URL.toFullString(),
                 BASE_URL_GROUP.toFullString(),
-                BASE_URL_GROUP_AND_VERSION.toFullString()), inMemoryMetadataService.getExportedURLs());
+                BASE_URL_GROUP_AND_VERSION.toFullString()), metadataService.getExportedURLs());
 
-        assertTrue(inMemoryMetadataService.exportURL(REST_BASE_URL));
-        exportedURLs = inMemoryMetadataService.getExportedURLs(TEST_SERVICE);
+        assertTrue(metadataService.exportURL(REST_BASE_URL));
+        exportedURLs = metadataService.getExportedURLs(TEST_SERVICE);
         assertEquals(asList(BASE_URL.toFullString(), REST_BASE_URL.toFullString()), exportedURLs);
+
+        metadataService.exportURL(BASE_URL_GROUP_AND_VERSION_AND_PROTOCOL);
+
+        exportedURLs = metadataService.getExportedURLs(TEST_SERVICE, "test", "1.0.0", "rest");
+
+        assertEquals(asList(BASE_URL_GROUP_AND_VERSION_AND_PROTOCOL.toFullString()), exportedURLs);
     }
 
     @Test
     public void testGetSubscribedURLs() {
-        assertTrue(inMemoryMetadataService.subscribeServiceURL(BASE_URL));
-        assertFalse(inMemoryMetadataService.subscribeServiceURL(BASE_URL));
+        assertTrue(metadataService.subscribeURL(BASE_URL));
+        assertFalse(metadataService.subscribeURL(BASE_URL));
 
-        assertTrue(inMemoryMetadataService.subscribeServiceURL(BASE_URL_GROUP));
-        assertTrue(inMemoryMetadataService.subscribeServiceURL(BASE_URL_GROUP_AND_VERSION));
-        assertTrue(inMemoryMetadataService.subscribeServiceURL(REST_BASE_URL));
+        assertTrue(metadataService.subscribeURL(BASE_URL_GROUP));
+        assertTrue(metadataService.subscribeURL(BASE_URL_GROUP_AND_VERSION));
+        assertTrue(metadataService.subscribeURL(REST_BASE_URL));
 
-        List<String> subscribedURLs = inMemoryMetadataService.getSubscribedURLs();
+        List<String> subscribedURLs = metadataService.getSubscribedURLs();
         assertEquals(4, subscribedURLs.size());
         assertEquals(asList(
                 BASE_URL.toFullString(),
@@ -99,23 +110,23 @@ public class InMemoryMetadataServiceTest {
                 BASE_URL_GROUP.toFullString(),
                 BASE_URL_GROUP_AND_VERSION.toFullString()), subscribedURLs);
 
-        assertTrue(inMemoryMetadataService.unsubscribeURL(REST_BASE_URL));
-        subscribedURLs = inMemoryMetadataService.getSubscribedURLs();
+        assertTrue(metadataService.unsubscribeURL(REST_BASE_URL));
+        subscribedURLs = metadataService.getSubscribedURLs();
         assertEquals(3, subscribedURLs.size());
         assertEquals(asList(
                 BASE_URL.toFullString(),
                 BASE_URL_GROUP.toFullString(),
                 BASE_URL_GROUP_AND_VERSION.toFullString()), subscribedURLs);
 
-        assertTrue(inMemoryMetadataService.unsubscribeURL(BASE_URL_GROUP));
-        subscribedURLs = inMemoryMetadataService.getSubscribedURLs();
+        assertTrue(metadataService.unsubscribeURL(BASE_URL_GROUP));
+        subscribedURLs = metadataService.getSubscribedURLs();
         assertEquals(2, subscribedURLs.size());
         assertEquals(asList(
                 BASE_URL.toFullString(),
                 BASE_URL_GROUP_AND_VERSION.toFullString()), subscribedURLs);
 
-        assertTrue(inMemoryMetadataService.unsubscribeURL(BASE_URL_GROUP_AND_VERSION));
-        subscribedURLs = inMemoryMetadataService.getSubscribedURLs();
+        assertTrue(metadataService.unsubscribeURL(BASE_URL_GROUP_AND_VERSION));
+        subscribedURLs = metadataService.getSubscribedURLs();
         assertEquals(1, subscribedURLs.size());
         assertEquals(asList(
                 BASE_URL.toFullString()), subscribedURLs);

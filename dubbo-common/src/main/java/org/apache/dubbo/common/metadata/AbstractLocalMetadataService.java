@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.common.metadata;
 
+import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.URL;
 
 import java.util.Collection;
@@ -32,19 +33,21 @@ import static java.util.Collections.unmodifiableList;
 import static org.apache.dubbo.common.URL.buildKey;
 
 /**
- * The {@link DubboMetadataService} implementation stores the metadata of Dubbo services in memory when they exported
+ * The Abstract {@link LocalMetadataService} implementation stores the metadata of Dubbo services in memory locally
+ * when they exported.
  *
+ * @see MetadataService
  * @since 2.7.2
  */
-public class InMemoryMetadataService implements DubboMetadataService {
+public abstract class AbstractLocalMetadataService implements LocalMetadataService {
 
     // =================================== Registration =================================== //
 
     /**
      * All exported {@link URL urls} {@link Map} whose key is the return value of {@link URL#getServiceKey()} method
-     * and value is the {@link List} of String presenting the {@link URL URLs}
+     * and value is the {@link List} of the {@link URL URLs}
      */
-    private ConcurrentMap<String, List<String>> exportedServiceURLs = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, List<URL>> exportedServiceURLs = new ConcurrentHashMap<>();
 
     // ==================================================================================== //
 
@@ -56,11 +59,11 @@ public class InMemoryMetadataService implements DubboMetadataService {
     private Set<String> subscribedServices = new LinkedHashSet<>();
 
     /**
-     * The subscribed {@link URL urls} {@link Map} of {@link DubboMetadataService},
+     * The subscribed {@link URL urls} {@link Map} of {@link MetadataService},
      * whose key is the return value of {@link URL#getServiceKey()} method and value is the {@link List} of
-     * String presenting the {@link URL URLs}
+     * the {@link URL URLs}
      */
-    private final ConcurrentMap<String, List<String>> subscribedServiceURLs = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, List<URL>> subscribedServiceURLs = new ConcurrentHashMap<>();
 
     // ==================================================================================== //
 
@@ -69,7 +72,7 @@ public class InMemoryMetadataService implements DubboMetadataService {
      */
     private final String serviceName;
 
-    public InMemoryMetadataService(String serviceName) {
+    public AbstractLocalMetadataService(String serviceName) {
         this.serviceName = serviceName;
     }
 
@@ -84,55 +87,68 @@ public class InMemoryMetadataService implements DubboMetadataService {
     }
 
     @Override
-    public List<String> getExportedURLs(String serviceInterface, String group, String version) {
+    public List<String> getExportedURLs(String serviceInterface, String group, String version, String protocol) {
         if (ALL_SERVICE_INTERFACES.equals(serviceInterface)) {
             return getAllServiceURLs(exportedServiceURLs);
         }
         String serviceKey = buildKey(serviceInterface, group, version);
-        return unmodifiableList(getServiceURLs(exportedServiceURLs, serviceKey));
+        return unmodifiableList(getServiceURLs(exportedServiceURLs, serviceKey, protocol));
     }
 
+    protected List<String> getServiceURLs(ConcurrentMap<String, List<URL>> exportedServiceURLs, String serviceKey,
+                                          String protocol) {
+        List<URL> serviceURLs = getServiceURLs(exportedServiceURLs, serviceKey);
+        return serviceURLs.stream().filter(
+                url -> protocol == null || protocol.equals(url.getParameter(Constants.PROTOCOL_KEY)))
+                .map(URL::toFullString)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public boolean exportURL(URL url) {
         return addURL(exportedServiceURLs, url);
     }
 
+    @Override
     public boolean unexportURL(URL url) {
         return removeURL(exportedServiceURLs, url);
     }
 
-    public boolean subscribeServiceURL(URL url) {
+    @Override
+    public boolean subscribeURL(URL url) {
         return addURL(subscribedServiceURLs, url);
     }
 
+    @Override
     public boolean unsubscribeURL(URL url) {
         return removeURL(subscribedServiceURLs, url);
     }
 
-    protected boolean addURL(Map<String, List<String>> serviceURLs, URL url) {
+    protected boolean addURL(Map<String, List<URL>> serviceURLs, URL url) {
         String serviceKey = url.getServiceKey();
-        List<String> urls = getServiceURLs(serviceURLs, serviceKey);
-        String urlString = url.toFullString();
-        if (!urls.contains(urlString)) {
-            return urls.add(url.toFullString());
+        List<URL> urls = getServiceURLs(serviceURLs, serviceKey);
+        if (!urls.contains(url)) {
+            return urls.add(url);
         }
         return false;
     }
 
-    protected boolean removeURL(Map<String, List<String>> serviceURLs, URL url) {
+    protected boolean removeURL(Map<String, List<URL>> serviceURLs, URL url) {
         String serviceKey = url.getServiceKey();
-        List<String> urls = getServiceURLs(serviceURLs, serviceKey);
-        return urls.remove(url.toFullString());
+        List<URL> urls = getServiceURLs(serviceURLs, serviceKey);
+        return urls.remove(url);
     }
 
-    protected List<String> getServiceURLs(Map<String, List<String>> serviceURLs, String serviceKey) {
+    protected List<URL> getServiceURLs(Map<String, List<URL>> serviceURLs, String serviceKey) {
         return serviceURLs.computeIfAbsent(serviceKey, s -> new LinkedList());
     }
 
-    protected List<String> getAllServiceURLs(Map<String, List<String>> serviceURLs) {
+    protected List<String> getAllServiceURLs(Map<String, List<URL>> serviceURLs) {
         return serviceURLs
                 .values()
                 .stream()
                 .flatMap(Collection::stream)
+                .map(URL::toFullString)
                 .collect(Collectors.toList());
     }
 }

@@ -17,29 +17,46 @@
 package org.apache.dubbo.common.metadata;
 
 import org.apache.dubbo.common.URL;
-
-import java.util.List;
-import java.util.Optional;
+import org.apache.dubbo.common.extension.SPI;
 
 /**
- * The exporter of {@link DubboMetadataService}
+ * Local {@link MetadataService} that extends {@link MetadataService} and provides the modification, which is used for
+ * Dubbo's consumers and providers.
  *
- * @see DubboMetadataService
- * @see #export()
- * @see #unexport()
  * @since 2.7.2
  */
-public interface DubboMetadataServiceExporter {
+@SPI
+public interface LocalMetadataService extends MetadataService {
 
     /**
-     * Exports the {@link DubboMetadataService} as a Dubbo service
+     * Exports a {@link URL}
      *
-     * @return the exported {@link URL URLs}
+     * @param url a {@link URL}
+     * @return If success , return <code>true</code>
      */
-    List<URL> export();
+    boolean exportURL(URL url);
 
     /**
-     * Unexports the {@link DubboMetadataService}
+     * Unexports a {@link URL}
+     *
+     * @param url a {@link URL}
+     * @return If success , return <code>true</code>
      */
-    void unexport();
+    boolean unexportURL(URL url);
+
+    /**
+     * Subscribes a {@link URL}
+     *
+     * @param url a {@link URL}
+     * @return If success , return <code>true</code>
+     */
+    boolean subscribeURL(URL url);
+
+    /**
+     * Unsubscribes a {@link URL}
+     *
+     * @param url a {@link URL}
+     * @return If success , return <code>true</code>
+     */
+    boolean unsubscribeURL(URL url);
 }

@@ -25,14 +25,14 @@ import java.util.List;
  * between Dubbo service providers and its consumers. The implementationwill be exported as a normal Dubbo service that
  * the clients would subscribe, whose version comes from the {@link #version()} method and group gets from
  * {@link #serviceName()}, that means, The different Dubbo service(application) will export the different
- * {@link DubboMetadataService} that persists all the exported and subscribed metadata, they are present by
- * {@link #getExportedURLs()} and {@link #getSubscribedURLs()} respectively. What's more, {@link DubboMetadataService}
+ * {@link MetadataService} that persists all the exported and subscribed metadata, they are present by
+ * {@link #getExportedURLs()} and {@link #getSubscribedURLs()} respectively. What's more, {@link MetadataService}
  * also providers the fine-grain methods for the precise queries.
  *
- * @see InMemoryMetadataService
+ * @see AbstractLocalMetadataService
  * @since 2.7.2
  */
-public interface DubboMetadataService {
+public interface MetadataService {
 
     /**
      * The value of all service names
@@ -45,7 +45,7 @@ public interface DubboMetadataService {
     String ALL_SERVICE_INTERFACES = "*";
 
     /**
-     * The contract version of {@link DubboMetadataService}, the future update must make sure compatible.
+     * The contract version of {@link MetadataService}, the future update must make sure compatible.
      */
     String VERSION = "1.0.0";
 
@@ -57,7 +57,7 @@ public interface DubboMetadataService {
     String serviceName();
 
     /**
-     * Gets the version of {@link DubboMetadataService} that always equals {@link #VERSION}
+     * Gets the version of {@link MetadataService} that always equals {@link #VERSION}
      *
      * @return non-null
      * @see #VERSION
@@ -107,8 +107,8 @@ public interface DubboMetadataService {
     }
 
     /**
-     * * Get the list of String that presents the specified Dubbo exported {@link URL urls} by the
-     * * <code>serviceInterface</code>, <code>group</code> and <code>version</code>
+     * Get the list of String that presents the specified Dubbo exported {@link URL urls} by the
+     * <code>serviceInterface</code>, <code>group</code> and <code>version</code>
      *
      * @param serviceInterface The class name of Dubbo service interface
      * @param group            the Dubbo Service Group (optional)
@@ -116,5 +116,20 @@ public interface DubboMetadataService {
      * @return non-null read-only {@link List}
      * @see URL
      */
-    List<String> getExportedURLs(String serviceInterface, String group, String version);
+    default List<String> getExportedURLs(String serviceInterface, String group, String version) {
+        return getExportedURLs(serviceInterface, group, version, null);
+    }
+
+    /**
+     * Get the list of String that presents the specified Dubbo exported {@link URL urls} by the
+     * <code>serviceInterface</code>, <code>group</code>, <code>version</code> and <code>protocol</code>
+     *
+     * @param serviceInterface The class name of Dubbo service interface
+     * @param group            the Dubbo Service Group (optional)
+     * @param version          the Dubbo Service Version (optional)
+     * @param protocol         the Dubbo Service Protocol (optional)
+     * @return non-null read-only {@link List}
+     * @see URL
+     */
+    List<String> getExportedURLs(String serviceInterface, String group, String version, String protocol);
 }
