@@ -16,7 +16,6 @@
  */
 package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.common.event.DirectEventDispatcher;
 import org.apache.dubbo.common.event.EventDispatcher;
 import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeListener;
 
@@ -26,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.apache.dubbo.common.event.EventDispatcher.getDefaultExtension;
+
 /**
  * In-Memory {@link ServiceDiscovery} implementation
  *
@@ -33,9 +34,9 @@ import java.util.Set;
  */
 public class InMemoryServiceDiscovery implements ServiceDiscovery {
 
-    private Map<String, List<ServiceInstance>> repository = new HashMap<>();
+    private final EventDispatcher dispatcher = getDefaultExtension();
 
-    private EventDispatcher dispatcher = new DirectEventDispatcher();
+    private Map<String, List<ServiceInstance>> repository = new HashMap<>();
 
     @Override
     public Set<String> getServices() {

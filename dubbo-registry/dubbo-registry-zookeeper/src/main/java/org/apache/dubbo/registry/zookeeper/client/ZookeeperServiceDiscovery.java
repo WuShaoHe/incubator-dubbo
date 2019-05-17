@@ -16,7 +16,6 @@
  */
 package org.apache.dubbo.registry.zookeeper.client;
 
-import org.apache.dubbo.common.event.DirectEventDispatcher;
 import org.apache.dubbo.common.event.EventDispatcher;
 import org.apache.dubbo.common.function.ThrowableConsumer;
 import org.apache.dubbo.common.function.ThrowableFunction;
@@ -29,6 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.apache.dubbo.common.event.EventDispatcher.getDefaultExtension;
 import static org.apache.dubbo.common.function.ThrowableFunction.execute;
 import static org.apache.dubbo.registry.zookeeper.client.util.CuratorFrameworkUtils.build;
 
@@ -40,7 +40,7 @@ public class ZookeeperServiceDiscovery implements ServiceRegistry, ServiceDiscov
 
     private final org.apache.curator.x.discovery.ServiceDiscovery serviceDiscovery;
 
-    private final EventDispatcher dispatcher = new DirectEventDispatcher();
+    private final EventDispatcher dispatcher = getDefaultExtension();
 
     public ZookeeperServiceDiscovery(org.apache.curator.x.discovery.ServiceDiscovery serviceDiscovery) {
         this.serviceDiscovery = serviceDiscovery;

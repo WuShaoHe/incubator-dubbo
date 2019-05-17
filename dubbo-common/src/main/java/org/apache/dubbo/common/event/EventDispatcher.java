@@ -16,6 +16,9 @@
  */
 package org.apache.dubbo.common.event;
 
+import org.apache.dubbo.common.extension.ExtensionLoader;
+import org.apache.dubbo.common.extension.SPI;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,8 +31,10 @@ import static java.util.stream.StreamSupport.stream;
  *
  * @see Event
  * @see EventListener
+ * @see DirectEventDispatcher
  * @since 2.7.2
  */
+@SPI("direct")
 public interface EventDispatcher {
 
     /**
@@ -130,5 +135,14 @@ public interface EventDispatcher {
      */
     default Executor getExecutor() {
         return DIRECT_EXECUTOR;
+    }
+
+    /**
+     * The default extension of {@link EventDispatcher} is loaded by {@link ExtensionLoader}
+     *
+     * @return the default extension of {@link EventDispatcher}
+     */
+    static EventDispatcher getDefaultExtension() {
+        return ExtensionLoader.getExtensionLoader(EventDispatcher.class).getDefaultExtension();
     }
 }
