@@ -14,22 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.registry.client.event;
+package org.apache.dubbo.registry.metadata;
 
-import org.apache.dubbo.common.event.EventListener;
+import org.apache.dubbo.common.metadata.AbstractLocalMetadataService;
+import org.apache.dubbo.common.metadata.MetadataService;
+import org.apache.dubbo.registry.client.ServiceDiscovery;
 
 /**
- * The Service Discovery Change {@link EventListener Event Listener}
+ * {@link MetadataService} implementation works
  *
- * @see ServiceDiscoveryChangeEvent
  * @since 2.7.2
  */
-public interface ServiceDiscoveryChangeListener extends EventListener<ServiceDiscoveryChangeEvent> {
+public class DiscoverableMetadataService extends AbstractLocalMetadataService {
 
-    /**
-     * On {@link ServiceDiscoveryChangeEvent the service change event}
-     *
-     * @param event {@link ServiceDiscoveryChangeEvent}
-     */
-    void onEvent(ServiceDiscoveryChangeEvent event);
+    private final ServiceDiscovery serviceDiscovery;
+
+    public DiscoverableMetadataService(String serviceName, ServiceDiscovery serviceDiscovery) {
+        super(serviceName);
+        this.serviceDiscovery = serviceDiscovery;
+    }
+
 }

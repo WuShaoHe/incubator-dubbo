@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.registry.client.event;
 
+import org.apache.dubbo.common.event.Event;
 import org.apache.dubbo.registry.client.ServiceInstance;
 
 import java.util.Collection;
@@ -27,10 +28,9 @@ import static java.util.Collections.unmodifiableCollection;
  * The Service Discovery Change {@link EventObject Event}
  *
  * @see ServiceDiscoveryChangeListener
- * @see ServiceDiscoveryChangeEventNotifier
  * @since 2.7.2
  */
-public class ServiceDiscoveryChangeEvent extends EventObject {
+public class ServiceDiscoveryChangeEvent extends Event {
 
     private final String serviceName;
 

@@ -16,6 +16,8 @@
  */
 package org.apache.dubbo.registry.client;
 
+import org.apache.dubbo.common.utils.DefaultPage;
+import org.apache.dubbo.common.utils.Page;
 import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeListener;
 
 import java.util.Collection;
@@ -99,9 +101,9 @@ public class CompositeServiceDiscovery implements ServiceDiscovery {
     }
 
     @Override
-    public void registerListener(String serviceName, ServiceDiscoveryChangeListener listener) {
+    public void registerListener(ServiceDiscoveryChangeListener listener) {
         for (ServiceDiscovery serviceDiscovery : serviceDiscoveries) {
-            serviceDiscovery.registerListener(serviceName, listener);
+            serviceDiscovery.registerListener(listener);
         }
     }
 

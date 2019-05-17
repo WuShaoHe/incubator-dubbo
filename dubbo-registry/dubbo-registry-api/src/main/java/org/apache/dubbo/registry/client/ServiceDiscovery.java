@@ -16,6 +16,8 @@
  */
 package org.apache.dubbo.registry.client;
 
+import org.apache.dubbo.common.utils.DefaultPage;
+import org.apache.dubbo.common.utils.Page;
 import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeListener;
 
 import java.util.ArrayList;
@@ -162,10 +164,9 @@ public interface ServiceDiscovery extends Comparable<ServiceDiscovery> {
     /**
      * Register {@link ServiceDiscoveryChangeListener the service chagne event listener}
      *
-     * @param serviceName the name of service that is required to be listened
      * @param listener    {@link ServiceDiscoveryChangeListener the service change event listener}
      */
-    void registerListener(String serviceName, ServiceDiscoveryChangeListener listener);
+    void registerListener(ServiceDiscoveryChangeListener listener);
 
     /**
      * The priority of current {@link ServiceDiscovery}

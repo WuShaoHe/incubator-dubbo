@@ -16,12 +16,13 @@
  */
 package org.apache.dubbo.registry.zookeeper.client;
 
+import org.apache.dubbo.common.event.DirectEventDispatcher;
+import org.apache.dubbo.common.event.EventDispatcher;
 import org.apache.dubbo.common.function.ThrowableConsumer;
 import org.apache.dubbo.common.function.ThrowableFunction;
 import org.apache.dubbo.registry.client.ServiceDiscovery;
 import org.apache.dubbo.registry.client.ServiceInstance;
 import org.apache.dubbo.registry.client.ServiceRegistry;
-import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeEventNotifier;
 import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeListener;
 
 import java.util.LinkedHashSet;
@@ -39,12 +40,10 @@ public class ZookeeperServiceDiscovery implements ServiceRegistry, ServiceDiscov
 
     private final org.apache.curator.x.discovery.ServiceDiscovery serviceDiscovery;
 
-    private final ServiceDiscoveryChangeEventNotifier notifier;
+    private final EventDispatcher dispatcher = new DirectEventDispatcher();
 
-    public ZookeeperServiceDiscovery(org.apache.curator.x.discovery.ServiceDiscovery serviceDiscovery,
-                                     ServiceDiscoveryChangeEventNotifier notifier) {
+    public ZookeeperServiceDiscovery(org.apache.curator.x.discovery.ServiceDiscovery serviceDiscovery) {
         this.serviceDiscovery = serviceDiscovery;
-        this.notifier = notifier;
     }
 
     @Override
@@ -93,8 +92,8 @@ public class ZookeeperServiceDiscovery implements ServiceRegistry, ServiceDiscov
     }
 
     @Override
-    public void registerListener(String serviceName, ServiceDiscoveryChangeListener listener) {
-        notifier.addListener(serviceName, listener);
+    public void registerListener(ServiceDiscoveryChangeListener listener) {
+        dispatcher.addEventListener(listener);
     }
 
     private void doInServiceRegistry(ThrowableConsumer<org.apache.curator.x.discovery.ServiceDiscovery> consumer) {

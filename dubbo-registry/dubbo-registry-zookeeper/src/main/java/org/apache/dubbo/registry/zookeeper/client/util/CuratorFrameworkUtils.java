@@ -19,8 +19,6 @@ package org.apache.dubbo.registry.zookeeper.client.util;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.registry.client.DefaultServiceInstance;
 import org.apache.dubbo.registry.client.ServiceInstance;
-import org.apache.dubbo.registry.client.event.DefaultServiceDiscoveryChangeEventNotifier;
-import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeEventNotifier;
 import org.apache.dubbo.registry.zookeeper.client.ZookeeperInstance;
 import org.apache.dubbo.registry.zookeeper.client.ZookeeperServiceDiscovery;
 
@@ -53,11 +51,7 @@ import static org.apache.dubbo.registry.zookeeper.client.util.CuratorFrameworkPa
 public abstract class CuratorFrameworkUtils {
 
     public static ZookeeperServiceDiscovery buildZookeeperServiceDiscovery(URL registerURL) throws Exception {
-        return buildZookeeperServiceDiscovery(registerURL, new DefaultServiceDiscoveryChangeEventNotifier());
-    }
-
-    public static ZookeeperServiceDiscovery buildZookeeperServiceDiscovery(URL registerURL, ServiceDiscoveryChangeEventNotifier notifier) throws Exception {
-        return new ZookeeperServiceDiscovery(buildServiceDiscovery(registerURL), notifier);
+        return new ZookeeperServiceDiscovery(buildServiceDiscovery(registerURL));
     }
 
     public static ServiceDiscovery<ZookeeperInstance> buildServiceDiscovery(URL registerURL) throws Exception {

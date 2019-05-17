@@ -17,8 +17,8 @@
 package org.apache.dubbo.registry.zookeeper.client;
 
 import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.utils.Page;
 import org.apache.dubbo.registry.client.DefaultServiceInstance;
-import org.apache.dubbo.registry.client.Page;
 import org.apache.dubbo.registry.client.ServiceInstance;
 
 import org.apache.curator.test.TestingServer;

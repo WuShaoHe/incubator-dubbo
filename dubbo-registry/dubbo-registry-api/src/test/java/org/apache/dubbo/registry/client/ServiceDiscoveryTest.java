@@ -16,6 +16,8 @@
  */
 package org.apache.dubbo.registry.client;
 
+import org.apache.dubbo.common.utils.Page;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;

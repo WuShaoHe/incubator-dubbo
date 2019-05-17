@@ -16,8 +16,8 @@
  */
 package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.registry.client.event.DefaultServiceDiscoveryChangeEventNotifier;
-import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeEventNotifier;
+import org.apache.dubbo.common.event.DirectEventDispatcher;
+import org.apache.dubbo.common.event.EventDispatcher;
 import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeListener;
 
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class InMemoryServiceDiscovery implements ServiceDiscovery {
 
     private Map<String, List<ServiceInstance>> repository = new HashMap<>();
 
-    private ServiceDiscoveryChangeEventNotifier notifier = new DefaultServiceDiscoveryChangeEventNotifier();
+    private EventDispatcher dispatcher = new DirectEventDispatcher();
 
     @Override
     public Set<String> getServices() {
@@ -48,8 +48,8 @@ public class InMemoryServiceDiscovery implements ServiceDiscovery {
     }
 
     @Override
-    public void registerListener(String serviceName, ServiceDiscoveryChangeListener listener) {
-        notifier.addListener(serviceName, listener);
+    public void registerListener(ServiceDiscoveryChangeListener listener) {
+        dispatcher.addEventListener(listener);
     }
 
     protected InMemoryServiceDiscovery addServiceInstance(ServiceInstance serviceInstance) {
