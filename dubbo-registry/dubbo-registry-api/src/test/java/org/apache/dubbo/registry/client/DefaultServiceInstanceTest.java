@@ -29,26 +29,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class DefaultServiceInstanceTest {
 
-    private final DefaultServiceInstance serviceInstance =
+    public static final DefaultServiceInstance INSTANCE =
             new DefaultServiceInstance("A", "127.0.0.1", 8080);
 
     @Test
     public void testDefaultValues() {
-        assertTrue(serviceInstance.isEnabled());
-        assertTrue(serviceInstance.isHealthy());
-        assertTrue(serviceInstance.getMetadata().isEmpty());
+        assertTrue(INSTANCE.isEnabled());
+        assertTrue(INSTANCE.isHealthy());
+        assertTrue(INSTANCE.getMetadata().isEmpty());
     }
 
     @Test
     public void testSetAndGetValues() {
-        serviceInstance.setEnabled(false);
-        serviceInstance.setHealthy(false);
+        INSTANCE.setEnabled(false);
+        INSTANCE.setHealthy(false);
 
-        assertEquals("A", serviceInstance.getServiceName());
-        assertEquals("127.0.0.1", serviceInstance.getHost());
-        assertEquals(8080, serviceInstance.getPort());
-        assertFalse(serviceInstance.isEnabled());
-        assertFalse(serviceInstance.isHealthy());
-        assertTrue(serviceInstance.getMetadata().isEmpty());
+        assertEquals("A", INSTANCE.getServiceName());
+        assertEquals("127.0.0.1", INSTANCE.getHost());
+        assertEquals(8080, INSTANCE.getPort());
+        assertFalse(INSTANCE.isEnabled());
+        assertFalse(INSTANCE.isHealthy());
+        assertTrue(INSTANCE.getMetadata().isEmpty());
     }
 }
