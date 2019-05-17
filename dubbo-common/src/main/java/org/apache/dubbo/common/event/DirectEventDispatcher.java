@@ -22,5 +22,9 @@ package org.apache.dubbo.common.event;
  * @see EventDispatcher
  * @since 2.7.2
  */
-public class DirectEventDispatcher extends AbstractEventDispatcher {
+public final class DirectEventDispatcher extends AbstractEventDispatcher {
+
+    public DirectEventDispatcher() {
+        super(DIRECT_EXECUTOR);
+    }
 }

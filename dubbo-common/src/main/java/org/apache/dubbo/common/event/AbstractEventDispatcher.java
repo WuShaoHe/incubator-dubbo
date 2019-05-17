@@ -41,6 +41,21 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
 
     private final ConcurrentMap<Class<? extends Event>, List<Listener>> listenersCache = new ConcurrentHashMap<>();
 
+    private final Executor executor;
+
+    /**
+     * Constructor with an instance of {@link Executor}
+     *
+     * @param executor {@link Executor}
+     * @throws NullPointerException <code>executor</code> is <code>null</code>
+     */
+    protected AbstractEventDispatcher(Executor executor) {
+        if (executor == null) {
+            throw new NullPointerException("executor must not be null");
+        }
+        this.executor = executor;
+    }
+
     @Override
     public void addListener(Listener<?> listener) throws NullPointerException, IllegalArgumentException {
         assertListener(listener);
@@ -81,11 +96,8 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
 
     @Override
     public void dispatch(Event event) {
-        Executor executor = getExecutor();
 
-        if (executor == null) { // If absent, uses DIRECT_EXECUTOR
-            executor = DIRECT_EXECUTOR;
-        }
+        Executor executor = getExecutor();
 
         // execute in sequential or parallel execution model
         executor.execute(() -> {
@@ -98,6 +110,14 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
                         listener.onEvent(event);
                     });
         });
+    }
+
+    /**
+     * @return the non-null {@link Executor}
+     */
+    @Override
+    public final Executor getExecutor() {
+        return executor;
     }
 
     protected void doInListener(Listener<?> listener, Consumer<Collection<Listener>> consumer) {

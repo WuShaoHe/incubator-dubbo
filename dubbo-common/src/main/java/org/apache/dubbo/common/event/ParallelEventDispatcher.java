@@ -16,35 +16,17 @@
  */
 package org.apache.dubbo.common.event;
 
-import java.io.Serializable;
-import java.util.Vector;
+import java.util.concurrent.ForkJoinPool;
 
 /**
- * {@link EchoEvent} {@link Listener} 2
+ * Parallel {@link EventDispatcher} implementation uses {@link ForkJoinPool#commonPool() JDK common thread pool}
  *
+ * @see ForkJoinPool#commonPool()
  * @since 2.7.2
  */
-public class EchoEventListener2 extends Vector<Listener<Event>> implements Serializable, Comparable<Listener<Event>>,
-        Listener<Event> {
+public class ParallelEventDispatcher extends AbstractEventDispatcher {
 
-    private AbstractListener<Event> delegate = new AbstractListener<Event>() {
-        @Override
-        protected void handleEvent(Event event) {
-            println("EchoEventListener2 : " + event);
-        }
-    };
-
-    @Override
-    public void onEvent(Event event) {
-        delegate.onEvent(event);
-    }
-
-    @Override
-    public int getPriority() {
-        return 0;
-    }
-
-    public int getEventOccurs() {
-        return delegate.getEventOccurs();
+    public ParallelEventDispatcher() {
+        super(ForkJoinPool.commonPool());
     }
 }

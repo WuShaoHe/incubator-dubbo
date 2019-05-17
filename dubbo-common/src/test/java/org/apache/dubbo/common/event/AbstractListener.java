@@ -33,4 +33,8 @@ public abstract class AbstractListener<E extends Event> implements Listener<E> {
     public int getEventOccurs() {
         return eventOccurs.get();
     }
+
+    protected void println(String message) {
+        System.out.printf("[%s] %s\n", Thread.currentThread().getName(), message);
+    }
 }

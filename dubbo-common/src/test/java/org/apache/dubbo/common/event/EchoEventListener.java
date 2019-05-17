@@ -27,6 +27,6 @@ class EchoEventListener extends AbstractListener<EchoEvent> implements Serializa
 
     @Override
     public void handleEvent(EchoEvent event) {
-        System.out.println("EchoEventListener : " + event);
+        println("EchoEventListener : " + event);
     }
 }
