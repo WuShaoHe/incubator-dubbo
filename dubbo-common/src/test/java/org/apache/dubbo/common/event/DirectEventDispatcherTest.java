@@ -48,7 +48,7 @@ public class DirectEventDispatcherTest {
 
     @AfterEach
     public void destroy() {
-        dispatcher.removeAllListeners();
+        dispatcher.removeAllEventListeners();
     }
 
     @Test
@@ -58,58 +58,58 @@ public class DirectEventDispatcherTest {
 
     @Test
     public void testGetAllListeners() {
-        assertTrue(dispatcher.getAllListeners().isEmpty());
+        assertTrue(dispatcher.getAllEventListeners().isEmpty());
     }
 
     @Test
     public void testSingleListener() {
         // add two listeners
-        dispatcher.addListener(echoEventListener);
-        dispatcher.addListener(echoEventListener2);
-        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllListeners());
+        dispatcher.addEventListener(echoEventListener);
+        dispatcher.addEventListener(echoEventListener2);
+        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
         // add a duplicated listener
-        dispatcher.addListener(echoEventListener);
-        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllListeners());
+        dispatcher.addEventListener(echoEventListener);
+        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
         // remove
-        dispatcher.removeListener(echoEventListener);
-        assertEquals(asList(echoEventListener2), dispatcher.getAllListeners());
+        dispatcher.removeEventListener(echoEventListener);
+        assertEquals(asList(echoEventListener2), dispatcher.getAllEventListeners());
 
-        dispatcher.removeListener(echoEventListener2);
-        assertEquals(emptyList(), dispatcher.getAllListeners());
+        dispatcher.removeEventListener(echoEventListener2);
+        assertEquals(emptyList(), dispatcher.getAllEventListeners());
     }
 
     @Test
     public void testMultipleListeners() {
 
         // add two listeners
-        dispatcher.addListeners(echoEventListener, echoEventListener2);
-        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllListeners());
+        dispatcher.addEventListeners(echoEventListener, echoEventListener2);
+        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
         // remove all listeners
-        dispatcher.removeAllListeners();
-        assertEquals(emptyList(), dispatcher.getAllListeners());
+        dispatcher.removeAllEventListeners();
+        assertEquals(emptyList(), dispatcher.getAllEventListeners());
 
         // add the duplicated listeners
-        dispatcher.addListeners(echoEventListener, echoEventListener, echoEventListener2);
-        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllListeners());
+        dispatcher.addEventListeners(echoEventListener, echoEventListener, echoEventListener2);
+        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
         // remove all listeners
-        dispatcher.removeAllListeners();
-        assertEquals(emptyList(), dispatcher.getAllListeners());
+        dispatcher.removeAllEventListeners();
+        assertEquals(emptyList(), dispatcher.getAllEventListeners());
 
-        dispatcher.addListeners(asList(echoEventListener, echoEventListener, echoEventListener2));
-        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllListeners());
+        dispatcher.addEventListeners(asList(echoEventListener, echoEventListener, echoEventListener2));
+        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
         dispatcher.removeListeners(asList(echoEventListener, echoEventListener, echoEventListener2));
-        assertEquals(emptyList(), dispatcher.getAllListeners());
+        assertEquals(emptyList(), dispatcher.getAllEventListeners());
     }
 
     @Test
     public void testDispatchEvent() {
 
-        dispatcher.addListener(echoEventListener);
+        dispatcher.addEventListener(echoEventListener);
 
         // dispatch a Event
         dispatcher.dispatch(new Event("Test") {
@@ -124,11 +124,11 @@ public class DirectEventDispatcherTest {
         // event has been handled
         assertEquals(1, echoEventListener.getEventOccurs());
 
-        dispatcher.addListener(echoEventListener2);
+        dispatcher.addEventListener(echoEventListener2);
 
         // reset the listeners
         init();
-        dispatcher.addListeners(echoEventListener, echoEventListener2);
+        dispatcher.addEventListeners(echoEventListener, echoEventListener2);
 
         // dispatch a Event
         dispatcher.dispatch(new Event("Test") {

@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
-import static org.apache.dubbo.common.event.Listener.findEventType;
+import static org.apache.dubbo.common.event.EventListener.findEventType;
 
 /**
  * The abstract {@link EventDispatcher} providers the common implementation.
@@ -39,7 +39,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
 
     private final Object mutex = new Object();
 
-    private final ConcurrentMap<Class<? extends Event>, List<Listener>> listenersCache = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Class<? extends Event>, List<EventListener>> listenersCache = new ConcurrentHashMap<>();
 
     private final Executor executor;
 
@@ -57,7 +57,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     }
 
     @Override
-    public void addListener(Listener<?> listener) throws NullPointerException, IllegalArgumentException {
+    public void addEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
         assertListener(listener);
         doInListener(listener, listeners -> {
             addIfAbsent(listeners, listener);
@@ -65,14 +65,14 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     }
 
     @Override
-    public void removeListener(Listener<?> listener) throws NullPointerException, IllegalArgumentException {
+    public void removeEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
         assertListener(listener);
         doInListener(listener, listeners -> listeners.remove(listener));
     }
 
     @Override
-    public List<Listener<?>> getAllListeners() {
-        List<Listener<?>> listeners = new LinkedList<>();
+    public List<EventListener<?>> getAllEventListeners() {
+        List<EventListener<?>> listeners = new LinkedList<>();
 
         listenersCache
                 .entrySet()
@@ -120,13 +120,13 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
         return executor;
     }
 
-    protected void doInListener(Listener<?> listener, Consumer<Collection<Listener>> consumer) {
+    protected void doInListener(EventListener<?> listener, Consumer<Collection<EventListener>> consumer) {
 
         Class<? extends Event> eventType = findEventType(listener);
 
         if (eventType != null) {
             synchronized (mutex) {
-                List<Listener> listeners = listenersCache.computeIfAbsent(eventType, e -> new LinkedList<>());
+                List<EventListener> listeners = listenersCache.computeIfAbsent(eventType, e -> new LinkedList<>());
                 // consume
                 consumer.accept(listeners);
                 // sort
@@ -135,7 +135,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
         }
     }
 
-    static void assertListener(Listener<?> listener) throws NullPointerException {
+    static void assertListener(EventListener<?> listener) throws NullPointerException {
         if (listener == null) {
             throw new NullPointerException("The listener must not be null.");
         }

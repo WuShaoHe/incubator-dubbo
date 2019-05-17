@@ -34,13 +34,13 @@ public class ParallelEventDispatcherTest {
 
     private EventDispatcher eventDispatcher;
 
-    private AbstractListener listener;
+    private AbstractEventListener listener;
 
     @BeforeEach
     public void init() {
         eventDispatcher = new ParallelEventDispatcher();
         listener = new EchoEventListener();
-        eventDispatcher.addListener(listener);
+        eventDispatcher.addEventListener(listener);
     }
 
     @Test

@@ -20,14 +20,14 @@ import java.io.Serializable;
 import java.util.Vector;
 
 /**
- * {@link EchoEvent} {@link Listener} 2
+ * {@link EchoEvent} {@link EventListener} 2
  *
  * @since 2.7.2
  */
-public class EchoEventListener2 extends Vector<Listener<Event>> implements Serializable, Comparable<Listener<Event>>,
-        Listener<Event> {
+public class EchoEventListener2 extends Vector<EventListener<Event>> implements Serializable, Comparable<EventListener<Event>>,
+        EventListener<Event> {
 
-    private AbstractListener<Event> delegate = new AbstractListener<Event>() {
+    private AbstractEventListener<Event> delegate = new AbstractEventListener<Event>() {
         @Override
         protected void handleEvent(Event event) {
             println("EchoEventListener2 : " + event);

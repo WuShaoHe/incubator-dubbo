@@ -19,11 +19,11 @@ package org.apache.dubbo.common.event;
 import java.io.Serializable;
 
 /**
- * {@link EchoEvent} {@link Listener}
+ * {@link EchoEvent} {@link EventListener}
  *
  * @since 2.7.2
  */
-class EchoEventListener extends AbstractListener<EchoEvent> implements Serializable {
+class EchoEventListener extends AbstractEventListener<EchoEvent> implements Serializable {
 
     @Override
     public void handleEvent(EchoEvent event) {

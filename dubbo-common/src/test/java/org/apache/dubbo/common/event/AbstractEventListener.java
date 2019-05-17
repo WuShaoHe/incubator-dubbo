@@ -18,7 +18,7 @@ package org.apache.dubbo.common.event;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class AbstractListener<E extends Event> implements Listener<E> {
+public abstract class AbstractEventListener<E extends Event> implements EventListener<E> {
 
     private final AtomicInteger eventOccurs = new AtomicInteger(0);
 

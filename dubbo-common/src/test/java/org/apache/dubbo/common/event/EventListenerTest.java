@@ -18,15 +18,15 @@ package org.apache.dubbo.common.event;
 
 import org.junit.jupiter.api.Test;
 
-import static org.apache.dubbo.common.event.Listener.findEventType;
+import static org.apache.dubbo.common.event.EventListener.findEventType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link Listener} Test
+ * {@link EventListener} Test
  *
  * @since 2.7.2
  */
-public class ListenerTest {
+public class EventListenerTest {
 
     @Test
     public void testFindEventHierarchicalTypes() {

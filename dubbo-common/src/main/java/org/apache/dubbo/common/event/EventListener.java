@@ -18,14 +18,13 @@ package org.apache.dubbo.common.event;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.EventListener;
 import java.util.Objects;
 
 import static java.lang.Integer.compare;
 import static org.apache.dubbo.common.utils.ReflectUtils.findParameterizedTypes;
 
 /**
- * The {@link Event Dubbo Event} Listener that is based on Java standard {@link EventListener} interface supports
+ * The {@link Event Dubbo Event} Listener that is based on Java standard {@link java.util.EventListener} interface supports
  * the generic {@link Event}.
  * <p>
  * The {@link #onEvent(Event) handle method} will be notified when the matched-type {@link Event Dubbo Event} is
@@ -33,11 +32,11 @@ import static org.apache.dubbo.common.utils.ReflectUtils.findParameterizedTypes;
  *
  * @param <E> the concrete class of {@link Event Dubbo Event}
  * @see Event
- * @see EventListener
+ * @see java.util.EventListener
  * @since 2.7.2
  */
 @FunctionalInterface
-public interface Listener<E extends Event> extends EventListener, Comparable<Listener<E>> {
+public interface EventListener<E extends Event> extends java.util.EventListener, Comparable<EventListener<E>> {
 
     /**
      * Handle a {@link Event Dubbo Event} when it's be published
@@ -47,12 +46,12 @@ public interface Listener<E extends Event> extends EventListener, Comparable<Lis
     void onEvent(E event);
 
     /**
-     * The priority of {@link Listener current listener}.
+     * The priority of {@link EventListener current listener}.
      *
      * @return the value is more greater, the priority is more lower.
      * {@link Integer#MIN_VALUE} indicates the highest priority. The default value is {@link Integer#MAX_VALUE}.
-     * The comparison rule , refer to {@link #compareTo(Listener)}.
-     * @see #compareTo(Listener)
+     * The comparison rule , refer to {@link #compareTo(EventListener)}.
+     * @see #compareTo(EventListener)
      * @see Integer#MAX_VALUE
      * @see Integer#MIN_VALUE
      */
@@ -61,33 +60,33 @@ public interface Listener<E extends Event> extends EventListener, Comparable<Lis
     }
 
     @Override
-    default int compareTo(Listener<E> another) {
+    default int compareTo(EventListener<E> another) {
         return compare(this.getPriority(), another.getPriority());
     }
 
     /**
-     * Find the {@link Class type} {@link Event Dubbo event} from the specified {@link Listener Dubbo event listener}
+     * Find the {@link Class type} {@link Event Dubbo event} from the specified {@link EventListener Dubbo event listener}
      *
-     * @param listener the {@link Class class} of {@link Listener Dubbo event listener}
+     * @param listener the {@link Class class} of {@link EventListener Dubbo event listener}
      * @return <code>null</code> if not found
      */
-    static Class<? extends Event> findEventType(Listener<?> listener) {
+    static Class<? extends Event> findEventType(EventListener<?> listener) {
         return findEventType(listener.getClass());
     }
 
     /**
-     * Find the {@link Class type} {@link Event Dubbo event} from the specified {@link Listener Dubbo event listener}
+     * Find the {@link Class type} {@link Event Dubbo event} from the specified {@link EventListener Dubbo event listener}
      *
-     * @param listenerClass the {@link Class class} of {@link Listener Dubbo event listener}
+     * @param listenerClass the {@link Class class} of {@link EventListener Dubbo event listener}
      * @return <code>null</code> if not found
      */
     static Class<? extends Event> findEventType(Class<?> listenerClass) {
         Class<? extends Event> eventType = null;
 
-        if (listenerClass != null && Listener.class.isAssignableFrom(listenerClass)) {
+        if (listenerClass != null && EventListener.class.isAssignableFrom(listenerClass)) {
             eventType = findParameterizedTypes(listenerClass)
                     .stream()
-                    .map(Listener::findEventType)
+                    .map(EventListener::findEventType)
                     .filter(Objects::nonNull)
                     .findAny()
                     .get();
@@ -98,16 +97,16 @@ public interface Listener<E extends Event> extends EventListener, Comparable<Lis
 
     /**
      * Find the type {@link Event Dubbo event} from the specified {@link ParameterizedType} presents
-     * a class of {@link Listener Dubbo event listener}
+     * a class of {@link EventListener Dubbo event listener}
      *
-     * @param parameterizedType the {@link ParameterizedType} presents a class of {@link Listener Dubbo event listener}
+     * @param parameterizedType the {@link ParameterizedType} presents a class of {@link EventListener Dubbo event listener}
      * @return <code>null</code> if not found
      */
     static Class<? extends Event> findEventType(ParameterizedType parameterizedType) {
         Class<? extends Event> eventType = null;
 
         Type rawType = parameterizedType.getRawType();
-        if ((rawType instanceof Class) && Listener.class.isAssignableFrom((Class) rawType)) {
+        if ((rawType instanceof Class) && EventListener.class.isAssignableFrom((Class) rawType)) {
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
             for (Type typeArgument : typeArguments) {
                 if (typeArgument instanceof Class) {
