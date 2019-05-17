@@ -18,6 +18,7 @@ package org.apache.dubbo.common.utils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.util.collections.Sets;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.apache.dubbo.common.utils.ReflectUtils.findHierarchicalTypes;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -399,6 +401,17 @@ public class ReflectUtilsTest {
         Assertions.assertThrows(IllegalStateException.class, () -> {
             ReflectUtils.forName("a.c.d.e.F");
         });
+    }
+
+    @Test
+    public void testFindParameterizedTypes() {
+
+    }
+
+    @Test
+    public void testFindHierarchicalTypes() {
+        assertEquals(Sets.newSet(String.class, Object.class), findHierarchicalTypes(String.class, Object.class));
+        assertEquals(Sets.newSet(String.class), findHierarchicalTypes(String.class, CharSequence.class));
     }
 
     public static class EmptyClass {
