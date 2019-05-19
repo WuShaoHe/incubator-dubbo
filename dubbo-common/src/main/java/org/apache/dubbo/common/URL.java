@@ -39,6 +39,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.apache.dubbo.common.Constants.GROUP_KEY;
+import static org.apache.dubbo.common.Constants.VERSION_KEY;
+
 /**
  * URL - Uniform Resource Locator (Immutable, ThreadSafe)
  * <p>
@@ -1309,6 +1312,7 @@ class URL implements Serializable {
 
     /**
      * The format of return value is '{group}/{interfaceName}:{version}'
+     *
      * @return
      */
     public String getServiceKey() {
@@ -1316,11 +1320,12 @@ class URL implements Serializable {
         if (inf == null) {
             return null;
         }
-        return buildKey(inf, getParameter(Constants.GROUP_KEY), getParameter(Constants.VERSION_KEY));
+        return buildKey(inf, getParameter(GROUP_KEY), getParameter(VERSION_KEY));
     }
 
     /**
      * The format of return value is '{group}/{path/interfaceName}:{version}'
+     *
      * @return
      */
     public String getPathKey() {
@@ -1328,7 +1333,7 @@ class URL implements Serializable {
         if (inf == null) {
             return null;
         }
-        return buildKey(inf, getParameter(Constants.GROUP_KEY), getParameter(Constants.VERSION_KEY));
+        return buildKey(inf, getParameter(GROUP_KEY), getParameter(VERSION_KEY));
     }
 
     public static String buildKey(String path, String group, String version) {
@@ -1360,8 +1365,50 @@ class URL implements Serializable {
         return getParameter(Constants.INTERFACE_KEY, path);
     }
 
+    /**
+     * Gets the group of this {@link URL}
+     *
+     * @return the group if present,or return <code>null</code>
+     * @since 2.7.2
+     */
+    public String getGroup() {
+        return getParameter(GROUP_KEY);
+    }
+
+    /**
+     * Gets the version of this {@link URL}
+     *
+     * @return the group if present,or return <code>null</code>
+     * @since 2.7.2
+     */
+    public String getVersion() {
+        return getParameter(VERSION_KEY);
+    }
+
     public URL setServiceInterface(String service) {
         return addParameter(Constants.INTERFACE_KEY, service);
+    }
+
+    /**
+     * Sets the group based on current {@link URL}
+     *
+     * @param group the group
+     * @return a new instance of {@link URL}
+     * @since 2.7.2
+     */
+    public URL setGroup(String group) {
+        return addParameter(GROUP_KEY, group);
+    }
+
+    /**
+     * Sets the version for current {@link URL}
+     *
+     * @param version the version
+     * @return a new instance of {@link URL}
+     * @since 2.7.2
+     */
+    public URL setVersion(String version) {
+        return addParameter(VERSION_KEY, version);
     }
 
     /**

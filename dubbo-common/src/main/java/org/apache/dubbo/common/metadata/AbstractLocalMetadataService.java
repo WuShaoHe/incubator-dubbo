@@ -41,6 +41,11 @@ import static org.apache.dubbo.common.URL.buildKey;
  */
 public abstract class AbstractLocalMetadataService implements LocalMetadataService {
 
+    /**
+     * The class name of {@link MetadataService}
+     */
+    static final String METADATA_SERVICE_CLASS_NAME = MetadataService.class.getName();
+
     // =================================== Registration =================================== //
 
     /**
@@ -104,13 +109,25 @@ public abstract class AbstractLocalMetadataService implements LocalMetadataServi
                 .collect(Collectors.toList());
     }
 
+
+    private boolean isMetadataServiceURL(URL url) {
+        String serviceInterface = url.getServiceInterface();
+        return METADATA_SERVICE_CLASS_NAME.equals(serviceInterface);
+    }
+
     @Override
     public boolean exportURL(URL url) {
+        if (isMetadataServiceURL(url)) { // ignore MetadataService in the export phase
+            return true;
+        }
         return addURL(exportedServiceURLs, url);
     }
 
     @Override
     public boolean unexportURL(URL url) {
+        if (isMetadataServiceURL(url)) { // ignore MetadataService in the export phase
+            return true;
+        }
         return removeURL(exportedServiceURLs, url);
     }
 

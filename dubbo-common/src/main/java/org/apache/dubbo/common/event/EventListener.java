@@ -89,7 +89,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
                     .map(EventListener::findEventType)
                     .filter(Objects::nonNull)
                     .findAny()
-                    .get();
+                    .orElse((Class) findEventType(listenerClass.getSuperclass()));
         }
 
         return eventType;

@@ -1118,10 +1118,22 @@ public final class ReflectUtils {
         List<Type> genericTypes = new LinkedList<>(asList(sourceClass.getGenericInterfaces()));
         // Add Generic Super Class
         genericTypes.add(sourceClass.getGenericSuperclass());
-        return unmodifiableSet(genericTypes.stream()
+
+        Set<ParameterizedType> parameterizedTypes = genericTypes.stream()
                 .filter(type -> type instanceof ParameterizedType)// filter ParameterizedType
                 .map(type -> ParameterizedType.class.cast(type))  // cast to ParameterizedType
-                .collect(Collectors.toSet()));                     // build as a Set
+                .collect(Collectors.toSet());
+
+        if (parameterizedTypes.isEmpty()) { // If not found, try to search super types recursively
+            genericTypes.stream()
+                    .filter(type -> type instanceof Class)
+                    .map(type -> Class.class.cast(type))
+                    .forEach(superClass -> {
+                        parameterizedTypes.addAll(findParameterizedTypes(superClass));
+                    });
+        }
+
+        return unmodifiableSet(parameterizedTypes);                     // build as a Set
 
     }
 

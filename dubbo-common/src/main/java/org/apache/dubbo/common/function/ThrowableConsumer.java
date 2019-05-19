@@ -48,7 +48,7 @@ public interface ThrowableConsumer<T> {
         try {
             accept(t);
         } catch (Throwable e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e.getMessage(), e.getCause());
         }
     }
 
