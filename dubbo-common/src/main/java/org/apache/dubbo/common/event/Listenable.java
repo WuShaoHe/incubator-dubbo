@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.common.event;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -106,4 +107,25 @@ public interface Listenable<E extends EventListener<?>> {
      * @see EventListener#getPriority()
      */
     List<E> getAllEventListeners();
+
+
+    /**
+     * Assets the listener is valid or not
+     *
+     * @param listener the instance of {@link EventListener}
+     * @throws NullPointerException
+     */
+    static void assertListener(EventListener<?> listener) throws NullPointerException {
+        if (listener == null) {
+            throw new NullPointerException("The listener must not be null.");
+        }
+
+        Class<?> listenerClass = listener.getClass();
+
+        int modifiers = listenerClass.getModifiers();
+
+        if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
+            throw new IllegalArgumentException("The listener must be concrete class");
+        }
+    }
 }

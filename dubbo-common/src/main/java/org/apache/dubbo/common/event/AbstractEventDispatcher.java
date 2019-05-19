@@ -16,7 +16,6 @@
  */
 package org.apache.dubbo.common.event;
 
-import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,7 +57,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
 
     @Override
     public void addEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
-        assertListener(listener);
+        Listenable.assertListener(listener);
         doInListener(listener, listeners -> {
             addIfAbsent(listeners, listener);
         });
@@ -66,7 +65,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
 
     @Override
     public void removeEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
-        assertListener(listener);
+        Listenable.assertListener(listener);
         doInListener(listener, listeners -> listeners.remove(listener));
     }
 
@@ -121,9 +120,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     }
 
     protected void doInListener(EventListener<?> listener, Consumer<Collection<EventListener>> consumer) {
-
         Class<? extends Event> eventType = findEventType(listener);
-
         if (eventType != null) {
             synchronized (mutex) {
                 List<EventListener> listeners = listenersCache.computeIfAbsent(eventType, e -> new LinkedList<>());
@@ -132,20 +129,6 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
                 // sort
                 sort(listeners);
             }
-        }
-    }
-
-    static void assertListener(EventListener<?> listener) throws NullPointerException {
-        if (listener == null) {
-            throw new NullPointerException("The listener must not be null.");
-        }
-
-        Class<?> listenerClass = listener.getClass();
-
-        int modifiers = listenerClass.getModifiers();
-
-        if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
-            throw new IllegalArgumentException("The listener must be concrete class");
         }
     }
 }
