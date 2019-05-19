@@ -48,12 +48,7 @@ public class InMemoryServiceDiscovery implements ServiceDiscovery {
         return repository.computeIfAbsent(serviceName, s -> new LinkedList<>());
     }
 
-    @Override
-    public void registerListener(ServiceDiscoveryChangeListener listener) {
-        dispatcher.addEventListener(listener);
-    }
-
-    protected InMemoryServiceDiscovery addServiceInstance(ServiceInstance serviceInstance) {
+    public InMemoryServiceDiscovery addServiceInstance(ServiceInstance serviceInstance) {
         String serviceName = serviceInstance.getServiceName();
         List<ServiceInstance> serviceInstances = repository.computeIfAbsent(serviceName, s -> new LinkedList<>());
         if (!serviceInstances.contains(serviceInstance)) {
@@ -66,4 +61,18 @@ public class InMemoryServiceDiscovery implements ServiceDiscovery {
         return "InMemoryServiceDiscovery";
     }
 
+    @Override
+    public void addEventListener(ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
+
+    }
+
+    @Override
+    public void removeEventListener(ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
+
+    }
+
+    @Override
+    public List<ServiceDiscoveryChangeListener> getAllEventListeners() {
+        return null;
+    }
 }

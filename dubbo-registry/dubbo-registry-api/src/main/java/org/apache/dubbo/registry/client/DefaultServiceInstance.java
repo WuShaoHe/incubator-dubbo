@@ -35,9 +35,9 @@ public class DefaultServiceInstance implements ServiceInstance {
 
     private final int port;
 
-    private boolean enabled = true;
+    private boolean enabled;
 
-    private boolean healthy = true;
+    private boolean healthy;
 
     private Map<String, String> metadata = new HashMap<>();
 
@@ -46,6 +46,8 @@ public class DefaultServiceInstance implements ServiceInstance {
         this.serviceName = serviceName;
         this.host = host;
         this.port = port;
+        this.enabled = true;
+        this.healthy = true;
     }
 
     public DefaultServiceInstance(String serviceName, String host, int port) {

@@ -16,15 +16,9 @@
  */
 package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.common.event.EventListener;
-import org.apache.dubbo.registry.client.event.ServiceInstanceEvent;
-import org.apache.dubbo.registry.client.event.ServiceInstancePreRegisteredEvent;
-import org.apache.dubbo.registry.client.event.ServiceInstanceRegisteredEvent;
-
 import org.junit.jupiter.api.Test;
 
 import static org.apache.dubbo.registry.client.DefaultServiceInstanceTest.INSTANCE;
-import static org.apache.dubbo.registry.client.EventPublishingServiceRegistryTest.handleEvent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -40,8 +34,6 @@ public class EventPublishingServiceRegistryTest {
 
     @Test
     public void testRegister() {
-        serviceRegistry.addEventListener(new BeforeEventListener());
-        serviceRegistry.addEventListener(new AfterEventListener());
         serviceRegistry.register(serviceInstance);
     }
 
@@ -53,27 +45,6 @@ public class EventPublishingServiceRegistryTest {
     @Test
     public void testUnregister() {
         serviceRegistry.unregister(serviceInstance);
-    }
-
-    static void handleEvent(ServiceInstanceEvent event) {
-        assertEquals(INSTANCE, event.getServiceInstance());
-        assertEquals(serviceRegistry, event.getSource());
-    }
-}
-
-class BeforeEventListener implements EventListener<ServiceInstancePreRegisteredEvent> {
-
-    @Override
-    public void onEvent(ServiceInstancePreRegisteredEvent event) {
-        handleEvent(event);
-    }
-}
-
-class AfterEventListener implements EventListener<ServiceInstanceRegisteredEvent> {
-
-    @Override
-    public void onEvent(ServiceInstanceRegisteredEvent event) {
-        handleEvent(event);
     }
 }
 

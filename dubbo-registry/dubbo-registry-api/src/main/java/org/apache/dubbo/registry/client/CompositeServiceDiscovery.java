@@ -101,13 +101,6 @@ public class CompositeServiceDiscovery implements ServiceDiscovery {
     }
 
     @Override
-    public void registerListener(ServiceDiscoveryChangeListener listener) {
-        for (ServiceDiscovery serviceDiscovery : serviceDiscoveries) {
-            serviceDiscovery.registerListener(listener);
-        }
-    }
-
-    @Override
     public String toString() {
         return format("%s [composite : %s]", this.getClass().getSimpleName(), valueOf(serviceDiscoveries));
     }
@@ -115,5 +108,20 @@ public class CompositeServiceDiscovery implements ServiceDiscovery {
     @Override
     public int getPriority() {
         return Integer.MIN_VALUE;
+    }
+
+    @Override
+    public void addEventListener(ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
+        serviceDiscoveries.forEach(serviceDiscovery -> serviceDiscovery.addEventListener(listener));
+    }
+
+    @Override
+    public void removeEventListener(ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
+        serviceDiscoveries.forEach(serviceDiscovery -> serviceDiscovery.removeEventListener(listener));
+    }
+
+    @Override
+    public List<ServiceDiscoveryChangeListener> getAllEventListeners() {
+        return serviceDiscoveries.stream().findFirst().get().getAllEventListeners();
     }
 }

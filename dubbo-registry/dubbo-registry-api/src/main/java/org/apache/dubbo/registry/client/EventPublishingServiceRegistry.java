@@ -18,11 +18,9 @@ package org.apache.dubbo.registry.client;
 
 import org.apache.dubbo.common.event.Event;
 import org.apache.dubbo.common.event.EventDispatcher;
-import org.apache.dubbo.common.event.EventListener;
 import org.apache.dubbo.registry.client.event.ServiceInstancePreRegisteredEvent;
 import org.apache.dubbo.registry.client.event.ServiceInstanceRegisteredEvent;
 
-import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -127,19 +125,4 @@ public abstract class EventPublishingServiceRegistry implements ServiceRegistry 
      * Stops the ServiceRegistry. This is a lifecycle method.
      */
     protected abstract void doStop();
-
-    @Override
-    public void addEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
-        eventDispatcher.addEventListener(listener);
-    }
-
-    @Override
-    public void removeEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
-        eventDispatcher.removeEventListener(listener);
-    }
-
-    @Override
-    public List<EventListener<?>> getAllEventListeners() {
-        return eventDispatcher.getAllEventListeners();
-    }
 }

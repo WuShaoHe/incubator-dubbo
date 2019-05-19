@@ -16,8 +16,14 @@
  */
 package org.apache.dubbo.registry.client;
 
+import org.apache.dubbo.common.event.EventDispatcher;
+import org.apache.dubbo.common.event.EventListener;
 import org.apache.dubbo.common.utils.Page;
+import org.apache.dubbo.registry.client.event.ServiceInstanceEvent;
+import org.apache.dubbo.registry.client.event.ServiceInstancePreRegisteredEvent;
+import org.apache.dubbo.registry.client.event.ServiceInstanceRegisteredEvent;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -26,6 +32,8 @@ import java.util.List;
 
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.Arrays.asList;
+import static org.apache.dubbo.registry.client.DefaultServiceInstanceTest.INSTANCE;
+import static org.apache.dubbo.registry.client.ServiceDiscoveryTest.handleEvent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,7 +45,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ServiceDiscoveryTest {
 
-    private InMemoryServiceDiscovery instance = new InMemoryServiceDiscovery();
+    private static InMemoryServiceDiscovery instance;
+
+    private EventDispatcher dispatcher = EventDispatcher.getDefaultExtension();
+
+    @BeforeEach
+    public void init() {
+        instance = new InMemoryServiceDiscovery();
+        dispatcher.addEventListener(new BeforeEventListener());
+        dispatcher.addEventListener(new AfterEventListener());
+        dispatcher.removeAllEventListeners();
+    }
 
     @Test
     public void testToString() {
@@ -212,4 +230,24 @@ public class ServiceDiscoveryTest {
     }
 
 
+    static void handleEvent(ServiceInstanceEvent event) {
+        assertEquals(INSTANCE, event.getServiceInstance());
+        assertEquals(instance, event.getSource());
+    }
+}
+
+class BeforeEventListener implements EventListener<ServiceInstancePreRegisteredEvent> {
+
+    @Override
+    public void onEvent(ServiceInstancePreRegisteredEvent event) {
+        handleEvent(event);
+    }
+}
+
+class AfterEventListener implements EventListener<ServiceInstanceRegisteredEvent> {
+
+    @Override
+    public void onEvent(ServiceInstanceRegisteredEvent event) {
+        handleEvent(event);
+    }
 }

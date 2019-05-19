@@ -16,14 +16,12 @@
  */
 package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.common.event.Listenable;
-
 /**
  * The common interface to register and unregister for a service registry
  *
  * @since 2.7.2
  */
-public interface ServiceRegistry extends Listenable {
+public interface ServiceRegistry {
 
     /**
      * A human-readable description of the implementation
