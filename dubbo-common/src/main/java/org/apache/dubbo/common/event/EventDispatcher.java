@@ -30,7 +30,7 @@ import java.util.concurrent.Executor;
  * @since 2.7.2
  */
 @SPI("direct")
-public interface EventDispatcher extends Listenable {
+public interface EventDispatcher extends Listenable<EventListener<?>> {
 
     /**
      * Direct {@link Executor} uses sequential execution model

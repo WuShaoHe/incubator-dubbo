@@ -28,7 +28,7 @@ import static java.util.stream.StreamSupport.stream;
  * @see EventDispatcher
  * @since 2.7.2
  */
-public interface Listenable {
+public interface Listenable<E extends EventListener<?>> {
 
     /**
      * Add a {@link EventListener Dubbo event listener}
@@ -38,7 +38,7 @@ public interface Listenable {
      * @throws NullPointerException     if <code>listener</code> argument is <code>null</code>
      * @throws IllegalArgumentException if <code>listener</code> argument is not concrete instance
      */
-    void addEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException;
+    void addEventListener(E listener) throws NullPointerException, IllegalArgumentException;
 
     /**
      * Add one or more {@link EventListener Dubbo event listeners}
@@ -48,9 +48,9 @@ public interface Listenable {
      * @throws NullPointerException     if one of arguments is <code>null</code>
      * @throws IllegalArgumentException if one of arguments argument is not concrete instance
      */
-    default void addEventListeners(EventListener<?> listener, EventListener<?>... others) throws NullPointerException,
+    default void addEventListeners(E listener, E... others) throws NullPointerException,
             IllegalArgumentException {
-        List<EventListener<?>> listeners = new ArrayList<>(1 + others.length);
+        List<E> listeners = new ArrayList<>(1 + others.length);
         listeners.add(listener);
         listeners.addAll(Arrays.asList(others));
         addEventListeners(listeners);
@@ -63,7 +63,7 @@ public interface Listenable {
      * @throws NullPointerException     if <code>listeners</code> argument is <code>null</code>
      * @throws IllegalArgumentException if any element of <code>listeners</code> is not concrete instance
      */
-    default void addEventListeners(Iterable<EventListener<?>> listeners) throws NullPointerException, IllegalArgumentException {
+    default void addEventListeners(Iterable<E> listeners) throws NullPointerException, IllegalArgumentException {
         stream(listeners.spliterator(), false).forEach(this::addEventListener);
     }
 
@@ -75,7 +75,7 @@ public interface Listenable {
      * If current {@link EventListener} is existed, return <code>false</code>
      * @throws NullPointerException if <code>listener</code> argument is <code>null</code>
      */
-    void removeEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException;
+    void removeEventListener(E listener) throws NullPointerException, IllegalArgumentException;
 
     /**
      * Remove a {@link EventListener Dubbo event listener}
@@ -86,7 +86,7 @@ public interface Listenable {
      * @throws NullPointerException     if <code>listener</code> argument is <code>null</code>
      * @throws IllegalArgumentException if any element of <code>listeners</code> is not concrete instance
      */
-    default void removeListeners(Iterable<EventListener<?>> listeners) throws NullPointerException, IllegalArgumentException {
+    default void removeListeners(Iterable<E> listeners) throws NullPointerException, IllegalArgumentException {
         stream(listeners.spliterator(), false).forEach(this::removeEventListener);
     }
 
@@ -105,5 +105,5 @@ public interface Listenable {
      * @return non-null read-only ordered {@link EventListener Dubbo event listeners}
      * @see EventListener#getPriority()
      */
-    List<EventListener<?>> getAllEventListeners();
+    List<E> getAllEventListeners();
 }
