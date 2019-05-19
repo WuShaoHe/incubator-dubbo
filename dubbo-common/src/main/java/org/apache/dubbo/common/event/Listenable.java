@@ -87,7 +87,7 @@ public interface Listenable<E extends EventListener<?>> {
      * @throws NullPointerException     if <code>listener</code> argument is <code>null</code>
      * @throws IllegalArgumentException if any element of <code>listeners</code> is not concrete instance
      */
-    default void removeListeners(Iterable<E> listeners) throws NullPointerException, IllegalArgumentException {
+    default void removeEventListeners(Iterable<E> listeners) throws NullPointerException, IllegalArgumentException {
         stream(listeners.spliterator(), false).forEach(this::removeEventListener);
     }
 
@@ -97,7 +97,7 @@ public interface Listenable<E extends EventListener<?>> {
      * @return a amount of removed listeners
      */
     default void removeAllEventListeners() {
-        removeListeners(getAllEventListeners());
+        removeEventListeners(getAllEventListeners());
     }
 
     /**

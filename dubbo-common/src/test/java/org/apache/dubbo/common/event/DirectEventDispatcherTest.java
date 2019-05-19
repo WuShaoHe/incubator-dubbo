@@ -102,7 +102,7 @@ public class DirectEventDispatcherTest {
         dispatcher.addEventListeners(asList(echoEventListener, echoEventListener, echoEventListener2));
         assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
-        dispatcher.removeListeners(asList(echoEventListener, echoEventListener, echoEventListener2));
+        dispatcher.removeEventListeners(asList(echoEventListener, echoEventListener, echoEventListener2));
         assertEquals(emptyList(), dispatcher.getAllEventListeners());
     }
 
