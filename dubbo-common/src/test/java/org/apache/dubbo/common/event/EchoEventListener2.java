@@ -17,6 +17,7 @@
 package org.apache.dubbo.common.event;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -46,5 +47,15 @@ public class EchoEventListener2 extends Vector<EventListener<Event>> implements 
 
     public int getEventOccurs() {
         return delegate.getEventOccurs();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this.getClass().equals(o.getClass());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getClass());
     }
 }

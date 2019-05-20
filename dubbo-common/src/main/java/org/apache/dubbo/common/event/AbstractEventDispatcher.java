@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executor;
@@ -27,11 +28,17 @@ import java.util.function.Consumer;
 
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
+import static java.util.ServiceLoader.load;
 import static org.apache.dubbo.common.event.EventListener.findEventType;
 
 /**
  * The abstract {@link EventDispatcher} providers the common implementation.
  *
+ * @see EventDispatcher
+ * @see Listenable
+ * @see ServiceLoader
+ * @see EventListener
+ * @see Event
  * @since 2.7.2
  */
 public abstract class AbstractEventDispatcher implements EventDispatcher {
@@ -53,6 +60,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
             throw new NullPointerException("executor must not be null");
         }
         this.executor = executor;
+        this.loadEventListenerInstances();
     }
 
     @Override
@@ -130,5 +138,18 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
                 sort(listeners);
             }
         }
+    }
+
+    /**
+     * Default, load the instances of {@link EventListener event listeners} by {@link ServiceLoader}
+     * <p>
+     * It could be override by the sub-class
+     *
+     * @see EventListener
+     * @see ServiceLoader#load(Class)
+     */
+    protected void loadEventListenerInstances() {
+        ServiceLoader<EventListener> serviceLoader = load(EventListener.class, getClass().getClassLoader());
+        serviceLoader.forEach(this::addEventListener);
     }
 }

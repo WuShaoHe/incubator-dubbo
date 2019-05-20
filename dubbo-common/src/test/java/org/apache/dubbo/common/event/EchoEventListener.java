@@ -23,7 +23,7 @@ import java.io.Serializable;
  *
  * @since 2.7.2
  */
-class EchoEventListener extends AbstractEventListener<EchoEvent> implements Serializable {
+public class EchoEventListener extends AbstractEventListener<EchoEvent> implements Serializable {
 
     @Override
     public void handleEvent(EchoEvent event) {
