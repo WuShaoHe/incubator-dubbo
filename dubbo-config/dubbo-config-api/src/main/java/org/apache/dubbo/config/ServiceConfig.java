@@ -33,7 +33,7 @@ import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.dubbo.config.context.ConfigManager;
 import org.apache.dubbo.config.event.ServiceConfigExportedEvent;
-import org.apache.dubbo.config.event.ServiceConfigUnExportedEvent;
+import org.apache.dubbo.config.event.ServiceConfigUnexportedEvent;
 import org.apache.dubbo.config.invoker.DelegateProviderMetaDataInvoker;
 import org.apache.dubbo.config.support.Parameter;
 import org.apache.dubbo.metadata.integration.MetadataReportService;
@@ -434,7 +434,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         unexported = true;
 
         // dispatch a ServiceConfigUnExportedEvent since 2.7.2
-        dispatch(new ServiceConfigUnExportedEvent(this));
+        dispatch(new ServiceConfigUnexportedEvent(this));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

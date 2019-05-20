@@ -24,9 +24,9 @@ import org.apache.dubbo.config.ServiceConfig;
  *
  * @since 2.7.2
  */
-public class ServiceConfigUnExportedEvent extends Event {
+public class ServiceConfigUnexportedEvent extends Event {
 
-    public ServiceConfigUnExportedEvent(ServiceConfig source) {
+    public ServiceConfigUnexportedEvent(ServiceConfig source) {
         super(source);
     }
 

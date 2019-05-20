@@ -25,7 +25,7 @@ import org.apache.dubbo.config.api.DemoService;
 import org.apache.dubbo.config.api.Greeting;
 import org.apache.dubbo.config.context.ConfigManager;
 import org.apache.dubbo.config.event.ServiceConfigExportedEvent;
-import org.apache.dubbo.config.event.ServiceConfigUnExportedEvent;
+import org.apache.dubbo.config.event.ServiceConfigUnexportedEvent;
 import org.apache.dubbo.config.mock.MockProtocol2;
 import org.apache.dubbo.config.mock.MockRegistryFactory2;
 import org.apache.dubbo.config.mock.TestProxyFactory;
@@ -204,9 +204,9 @@ public class ServiceConfigTest {
 
             assertTrue(reference.compareAndSet(service, null));
 
-            eventDispatcher.addEventListener(new EventListener<ServiceConfigUnExportedEvent>() {
+            eventDispatcher.addEventListener(new EventListener<ServiceConfigUnexportedEvent>() {
                 @Override
-                public void onEvent(ServiceConfigUnExportedEvent event) {
+                public void onEvent(ServiceConfigUnexportedEvent event) {
                     reference.set(event.getServiceConfig());
                 }
             });
