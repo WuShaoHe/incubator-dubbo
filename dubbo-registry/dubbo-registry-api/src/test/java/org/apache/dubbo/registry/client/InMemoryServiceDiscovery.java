@@ -62,17 +62,8 @@ public class InMemoryServiceDiscovery implements ServiceDiscovery {
     }
 
     @Override
-    public void addEventListener(ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
-
+    public void addServiceDiscoveryChangeListener(String serviceName, ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
+        dispatcher.addEventListener(listener);
     }
 
-    @Override
-    public void removeEventListener(ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
-
-    }
-
-    @Override
-    public List<ServiceDiscoveryChangeListener> getAllEventListeners() {
-        return null;
-    }
 }

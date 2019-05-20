@@ -28,8 +28,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import static java.util.Arrays.asList;
 import static org.apache.dubbo.common.utils.NetUtils.getAvailablePort;
@@ -45,7 +47,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 2.7.2
  */
 public class ZookeeperServiceDiscoveryTest {
-
 
     private static final String SERVICE_NAME = "A";
 
@@ -108,7 +109,7 @@ public class ZookeeperServiceDiscoveryTest {
     }
 
     @Test
-    public void testGetInstances() {
+    public void testGetInstances() throws InterruptedException {
 
         List<ServiceInstance> instances = asList(
                 createServiceInstance(SERVICE_NAME, LOCALHOST, 8080),
@@ -118,6 +119,22 @@ public class ZookeeperServiceDiscoveryTest {
 
         instances.forEach(discovery::register);
 
+        List<ServiceInstance> serviceInstances = new LinkedList<>();
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        // Add Listener
+        discovery.addServiceDiscoveryChangeListener(SERVICE_NAME, event -> {
+            serviceInstances.addAll(event.getServiceInstances());
+            latch.countDown();
+        });
+
+        discovery.register(createServiceInstance(SERVICE_NAME, LOCALHOST, 8082));
+        discovery.update(createServiceInstance(SERVICE_NAME, LOCALHOST, 8082));
+
+        latch.await();
+
+        assertEquals(3, serviceInstances.size());
 
         // offset starts 0
         int offset = 0;

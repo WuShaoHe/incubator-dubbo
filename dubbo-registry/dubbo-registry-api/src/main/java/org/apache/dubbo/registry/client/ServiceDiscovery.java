@@ -16,7 +16,6 @@
  */
 package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.common.event.Listenable;
 import org.apache.dubbo.common.utils.DefaultPage;
 import org.apache.dubbo.common.utils.Page;
 import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeListener;
@@ -27,20 +26,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.lang.Integer.compare;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
-import static org.apache.dubbo.common.event.EventDispatcher.getDefaultExtension;
 
 /**
  * The common operations of Service Discovery
  *
  * @since 2.7.2
  */
-public interface ServiceDiscovery extends Listenable<ServiceDiscoveryChangeListener>, Comparable<ServiceDiscovery> {
+public interface ServiceDiscovery extends Comparable<ServiceDiscovery> {
 
     /**
      * A human-readable description of the implementation
@@ -186,25 +182,14 @@ public interface ServiceDiscovery extends Listenable<ServiceDiscoveryChangeListe
         return compare(this.getPriority(), that.getPriority());
     }
 
-    @Override
-    default void addEventListener(ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
-        Listenable.assertListener(listener);
-        getDefaultExtension().addEventListener(listener);
-    }
-
-    @Override
-    default void removeEventListener(ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
-        Listenable.assertListener(listener);
-        getDefaultExtension().removeEventListener(listener);
-    }
-
-    @Override
-    default List<ServiceDiscoveryChangeListener> getAllEventListeners() {
-        return unmodifiableList(getDefaultExtension()
-                .getAllEventListeners()
-                .stream()
-                .filter(listener -> listener instanceof ServiceDiscoveryChangeListener)
-                .map(listener -> ServiceDiscoveryChangeListener.class.cast(listener))
-                .collect(Collectors.toList()));
-    }
+    /**
+     * Add an instance of {@link ServiceDiscoveryChangeListener} for specified service
+     *
+     * @param serviceName the service name
+     * @param listener    an instance of {@link ServiceDiscoveryChangeListener}
+     * @throws NullPointerException
+     * @throws IllegalArgumentException
+     */
+    void addServiceDiscoveryChangeListener(String serviceName, ServiceDiscoveryChangeListener listener)
+            throws NullPointerException, IllegalArgumentException;
 }

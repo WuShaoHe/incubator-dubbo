@@ -41,7 +41,6 @@ import static org.apache.dubbo.registry.zookeeper.client.util.CuratorFrameworkPa
 import static org.apache.dubbo.registry.zookeeper.client.util.CuratorFrameworkParams.BLOCK_UNTIL_CONNECTED_WAIT;
 import static org.apache.dubbo.registry.zookeeper.client.util.CuratorFrameworkParams.MAX_RETRIES;
 import static org.apache.dubbo.registry.zookeeper.client.util.CuratorFrameworkParams.MAX_SLEEP;
-import static org.apache.dubbo.registry.zookeeper.client.util.CuratorFrameworkParams.ROOT_PATH;
 
 /**
  * Curator Framework Utilities Class
@@ -51,13 +50,14 @@ import static org.apache.dubbo.registry.zookeeper.client.util.CuratorFrameworkPa
 public abstract class CuratorFrameworkUtils {
 
     public static ZookeeperServiceDiscovery buildZookeeperServiceDiscovery(URL registerURL) throws Exception {
-        return new ZookeeperServiceDiscovery(buildServiceDiscovery(registerURL));
+        return new ZookeeperServiceDiscovery(registerURL);
     }
 
-    public static ServiceDiscovery<ZookeeperInstance> buildServiceDiscovery(URL registerURL) throws Exception {
+    public static ServiceDiscovery<ZookeeperInstance> buildServiceDiscovery(CuratorFramework curatorFramework,
+                                                                            String basePath) {
         return ServiceDiscoveryBuilder.builder(ZookeeperInstance.class)
-                .client(buildCuratorFramework(registerURL))
-                .basePath(ROOT_PATH.getParameterValue(registerURL))
+                .client(curatorFramework)
+                .basePath(basePath)
                 .build();
     }
 

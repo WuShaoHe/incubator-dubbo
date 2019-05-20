@@ -111,17 +111,8 @@ public class CompositeServiceDiscovery implements ServiceDiscovery {
     }
 
     @Override
-    public void addEventListener(ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
-        serviceDiscoveries.forEach(serviceDiscovery -> serviceDiscovery.addEventListener(listener));
-    }
-
-    @Override
-    public void removeEventListener(ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
-        serviceDiscoveries.forEach(serviceDiscovery -> serviceDiscovery.removeEventListener(listener));
-    }
-
-    @Override
-    public List<ServiceDiscoveryChangeListener> getAllEventListeners() {
-        return serviceDiscoveries.stream().findFirst().get().getAllEventListeners();
+    public void addServiceDiscoveryChangeListener(String serviceName,
+                                                  ServiceDiscoveryChangeListener listener) throws NullPointerException, IllegalArgumentException {
+        serviceDiscoveries.forEach(serviceDiscovery -> serviceDiscovery.addServiceDiscoveryChangeListener(serviceName, listener));
     }
 }
