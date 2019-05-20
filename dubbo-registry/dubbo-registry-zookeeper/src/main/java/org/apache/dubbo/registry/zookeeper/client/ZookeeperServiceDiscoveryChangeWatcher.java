@@ -16,7 +16,7 @@
  */
 package org.apache.dubbo.registry.zookeeper.client;
 
-import org.apache.dubbo.common.event.EventDispatcher;
+import org.apache.dubbo.event.EventDispatcher;
 import org.apache.dubbo.registry.client.ServiceDiscovery;
 import org.apache.dubbo.registry.client.ServiceInstance;
 import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeEvent;

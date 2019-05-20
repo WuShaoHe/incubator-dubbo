@@ -16,9 +16,9 @@
  */
 package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.common.event.EventDispatcher;
-import org.apache.dubbo.common.event.EventListener;
 import org.apache.dubbo.common.utils.Page;
+import org.apache.dubbo.event.EventDispatcher;
+import org.apache.dubbo.event.EventListener;
 import org.apache.dubbo.registry.client.event.ServiceInstanceEvent;
 import org.apache.dubbo.registry.client.event.ServiceInstancePreRegisteredEvent;
 import org.apache.dubbo.registry.client.event.ServiceInstanceRegisteredEvent;

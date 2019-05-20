@@ -14,31 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.common.event;
-
-import org.junit.jupiter.api.Test;
-
-import static org.apache.dubbo.common.event.EventListener.findEventType;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+package org.apache.dubbo.event;
 
 /**
- * {@link EventListener} Test
+ * Direct {@link EventDispatcher} implementation uses current thread execution model
  *
+ * @see EventDispatcher
  * @since 2.7.2
  */
-public class EventListenerTest {
+public final class DirectEventDispatcher extends AbstractEventDispatcher {
 
-    @Test
-    public void testFindEventHierarchicalTypes() {
-        assertEquals(EchoEvent.class, findEventType(new EchoEventListener()));
-        assertEquals(Event.class, findEventType(new EchoEventListener2()));
-
-        assertEquals(EchoEvent.class, findEventType(EchoEventListener.class));
-        assertEquals(Event.class, findEventType(EchoEventListener2.class));
+    public DirectEventDispatcher() {
+        super(DIRECT_EXECUTOR);
     }
-
-    @Test
-    public void testOnEvent() {
-    }
-
 }

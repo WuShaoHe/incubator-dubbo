@@ -14,19 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.common.event;
-
-import java.util.concurrent.ForkJoinPool;
+package org.apache.dubbo.event;
 
 /**
- * Parallel {@link EventDispatcher} implementation uses {@link ForkJoinPool#commonPool() JDK common thread pool}
+ * Echo {@link Event}
  *
- * @see ForkJoinPool#commonPool()
  * @since 2.7.2
  */
-public class ParallelEventDispatcher extends AbstractEventDispatcher {
+class EchoEvent extends Event {
 
-    public ParallelEventDispatcher() {
-        super(ForkJoinPool.commonPool());
+    public EchoEvent(Object source) {
+        super(source);
     }
 }

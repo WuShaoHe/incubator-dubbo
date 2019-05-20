@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.common.event;
+package org.apache.dubbo.event;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
 import static java.util.ServiceLoader.load;
-import static org.apache.dubbo.common.event.EventListener.findEventType;
+import static org.apache.dubbo.event.EventListener.findEventType;
 
 /**
  * The abstract {@link EventDispatcher} providers the common implementation.

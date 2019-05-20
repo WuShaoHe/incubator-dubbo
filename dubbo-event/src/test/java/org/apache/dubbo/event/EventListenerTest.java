@@ -14,28 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.common.event;
+package org.apache.dubbo.event;
 
 import org.junit.jupiter.api.Test;
 
+import static org.apache.dubbo.event.EventListener.findEventType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link GenericEvent} Test
+ * {@link EventListener} Test
  *
  * @since 2.7.2
  */
-public class GenericEventTest {
+public class EventListenerTest {
 
     @Test
-    public void test() {
+    public void testFindEventHierarchicalTypes() {
+        assertEquals(EchoEvent.class, findEventType(new EchoEventListener()));
+        assertEquals(Event.class, findEventType(new EchoEventListener2()));
 
-        long timestamp = System.currentTimeMillis();
-        GenericEvent<String> event = new GenericEvent("Hello,World");
+        assertEquals(EchoEvent.class, findEventType(EchoEventListener.class));
+        assertEquals(Event.class, findEventType(EchoEventListener2.class));
+    }
 
-        assertEquals("Hello,World", event.getSource());
-        assertTrue(event.getTimestamp() >= timestamp);
+    @Test
+    public void testOnEvent() {
     }
 
 }

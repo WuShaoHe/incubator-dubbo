@@ -16,7 +16,7 @@
  */
 package org.apache.dubbo.registry.client;
 
-import org.apache.dubbo.common.event.EventDispatcher;
+import org.apache.dubbo.event.EventDispatcher;
 import org.apache.dubbo.registry.client.event.ServiceDiscoveryChangeListener;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.apache.dubbo.common.event.EventDispatcher.getDefaultExtension;
+import static org.apache.dubbo.event.EventDispatcher.getDefaultExtension;
 
 /**
  * In-Memory {@link ServiceDiscovery} implementation

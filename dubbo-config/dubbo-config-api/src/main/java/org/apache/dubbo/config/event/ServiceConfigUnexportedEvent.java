@@ -16,8 +16,8 @@
  */
 package org.apache.dubbo.config.event;
 
-import org.apache.dubbo.common.event.Event;
 import org.apache.dubbo.config.ServiceConfig;
+import org.apache.dubbo.event.Event;
 
 /**
  * {@link ServiceConfig} event post-{@link ServiceConfig#unexport() unexport}

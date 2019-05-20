@@ -14,21 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.common.event;
+package org.apache.dubbo.event;
+
+import java.util.EventObject;
 
 /**
- * Generic {@link Event Dubbo event}
+ * An event object of Dubbo is based on the Java standard {@link EventObject event}
  *
- * @param <S> the type of event source
  * @since 2.7.2
  */
-public class GenericEvent<S> extends Event {
+public abstract class Event extends EventObject {
 
-    public GenericEvent(S source) {
+    private static final long serialVersionUID = -1704315605423947137L;
+
+    /**
+     * The timestamp of event occurs
+     */
+    private final long timestamp;
+
+    /**
+     * Constructs a prototypical Event.
+     *
+     * @param source The object on which the Event initially occurred.
+     * @throws IllegalArgumentException if source is null.
+     */
+    public Event(Object source) {
         super(source);
+        this.timestamp = System.currentTimeMillis();
     }
 
-    public S getSource() {
-        return (S) super.getSource();
+    public long getTimestamp() {
+        return timestamp;
     }
 }

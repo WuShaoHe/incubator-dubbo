@@ -17,11 +17,11 @@
 package org.apache.dubbo.registry.zookeeper.client;
 
 import org.apache.dubbo.common.URL;
-import org.apache.dubbo.common.event.EventDispatcher;
 import org.apache.dubbo.common.function.ThrowableConsumer;
 import org.apache.dubbo.common.function.ThrowableFunction;
 import org.apache.dubbo.common.logger.Logger;
 import org.apache.dubbo.common.logger.LoggerFactory;
+import org.apache.dubbo.event.EventDispatcher;
 import org.apache.dubbo.registry.client.EventPublishingServiceRegistry;
 import org.apache.dubbo.registry.client.ServiceDiscovery;
 import org.apache.dubbo.registry.client.ServiceInstance;

@@ -16,7 +16,7 @@
  */
 package org.apache.dubbo.registry.client.event;
 
-import org.apache.dubbo.common.event.EventListener;
+import org.apache.dubbo.event.EventListener;
 
 /**
  * The Service Discovery Change {@link EventListener Event Listener}

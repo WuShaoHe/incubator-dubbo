@@ -14,16 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.common.event;
+package org.apache.dubbo.event;
+
+import java.io.Serializable;
 
 /**
- * Echo {@link Event}
+ * {@link EchoEvent} {@link EventListener}
  *
  * @since 2.7.2
  */
-class EchoEvent extends Event {
+public class EchoEventListener extends AbstractEventListener<EchoEvent> implements Serializable {
 
-    public EchoEvent(Object source) {
-        super(source);
+    @Override
+    public void handleEvent(EchoEvent event) {
+        println("EchoEventListener : " + event);
     }
 }

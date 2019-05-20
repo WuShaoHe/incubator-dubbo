@@ -14,32 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.common.event;
+package org.apache.dubbo.event;
 
 import org.junit.jupiter.api.Test;
 
-import static org.apache.dubbo.common.event.EventDispatcher.DIRECT_EXECUTOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link EventDispatcher} Test
+ * {@link GenericEvent} Test
  *
- * @see DirectEventDispatcher
  * @since 2.7.2
  */
-public class EventDispatcherTest {
-
-    private EventDispatcher defaultInstance = EventDispatcher.getDefaultExtension();
+public class GenericEventTest {
 
     @Test
-    public void testDefaultInstance() {
-        assertEquals(DirectEventDispatcher.class, defaultInstance.getClass());
+    public void test() {
+
+        long timestamp = System.currentTimeMillis();
+        GenericEvent<String> event = new GenericEvent("Hello,World");
+
+        assertEquals("Hello,World", event.getSource());
+        assertTrue(event.getTimestamp() >= timestamp);
     }
 
-    @Test
-    public void testDefaultMethods() {
-        assertEquals(DIRECT_EXECUTOR, defaultInstance.getExecutor());
-        assertTrue(defaultInstance.getAllEventListeners().isEmpty());
-    }
 }

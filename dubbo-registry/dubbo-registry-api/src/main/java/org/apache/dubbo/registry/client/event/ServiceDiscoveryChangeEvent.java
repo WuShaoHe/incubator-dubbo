@@ -16,7 +16,7 @@
  */
 package org.apache.dubbo.registry.client.event;
 
-import org.apache.dubbo.common.event.Event;
+import org.apache.dubbo.event.Event;
 import org.apache.dubbo.registry.client.ServiceInstance;
 
 import java.util.Collection;
