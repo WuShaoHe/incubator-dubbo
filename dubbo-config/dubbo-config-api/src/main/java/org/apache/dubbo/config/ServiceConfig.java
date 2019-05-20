@@ -22,6 +22,8 @@ import org.apache.dubbo.common.URLBuilder;
 import org.apache.dubbo.common.Version;
 import org.apache.dubbo.common.bytecode.Wrapper;
 import org.apache.dubbo.common.config.Environment;
+import org.apache.dubbo.common.event.Event;
+import org.apache.dubbo.common.event.EventDispatcher;
 import org.apache.dubbo.common.extension.ExtensionLoader;
 import org.apache.dubbo.common.utils.ClassUtils;
 import org.apache.dubbo.common.utils.CollectionUtils;
@@ -30,6 +32,8 @@ import org.apache.dubbo.common.utils.NamedThreadFactory;
 import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.dubbo.config.context.ConfigManager;
+import org.apache.dubbo.config.event.ServiceConfigExportedEvent;
+import org.apache.dubbo.config.event.ServiceConfigUnExportedEvent;
 import org.apache.dubbo.config.invoker.DelegateProviderMetaDataInvoker;
 import org.apache.dubbo.config.support.Parameter;
 import org.apache.dubbo.metadata.integration.MetadataReportService;
@@ -75,6 +79,8 @@ import static org.apache.dubbo.common.utils.NetUtils.isInvalidPort;
 public class ServiceConfig<T> extends AbstractServiceConfig {
 
     private static final long serialVersionUID = 3033787999037024738L;
+
+    private static final EventDispatcher eventDispathcer = EventDispatcher.getDefaultExtension();
 
     /**
      * The {@link Protocol} implementation with adaptive functionality,it will be different in different scenarios.
@@ -387,6 +393,13 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             path = interfaceName;
         }
         doExportUrls();
+
+        // dispatch a ServiceConfigExportedEvent since 2.7.2
+        dispatch(new ServiceConfigExportedEvent(this));
+    }
+
+    private void dispatch(Event event) {
+        eventDispathcer.dispatch(event);
     }
 
     private void checkRef() {
@@ -419,6 +432,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             exporters.clear();
         }
         unexported = true;
+
+        // dispatch a ServiceConfigUnExportedEvent since 2.7.2
+        dispatch(new ServiceConfigUnExportedEvent(this));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

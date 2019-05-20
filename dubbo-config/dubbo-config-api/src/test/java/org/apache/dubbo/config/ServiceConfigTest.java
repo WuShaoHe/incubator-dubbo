@@ -19,9 +19,13 @@ package org.apache.dubbo.config;
 
 import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.event.EventDispatcher;
+import org.apache.dubbo.common.event.EventListener;
 import org.apache.dubbo.config.api.DemoService;
 import org.apache.dubbo.config.api.Greeting;
 import org.apache.dubbo.config.context.ConfigManager;
+import org.apache.dubbo.config.event.ServiceConfigExportedEvent;
+import org.apache.dubbo.config.event.ServiceConfigUnExportedEvent;
 import org.apache.dubbo.config.mock.MockProtocol2;
 import org.apache.dubbo.config.mock.MockRegistryFactory2;
 import org.apache.dubbo.config.mock.TestProxyFactory;
@@ -41,6 +45,7 @@ import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.apache.dubbo.common.Constants.GENERIC_SERIALIZATION_BEAN;
 import static org.apache.dubbo.common.Constants.GENERIC_SERIALIZATION_DEFAULT;
@@ -63,6 +68,8 @@ public class ServiceConfigTest {
     private ServiceConfig<DemoServiceImpl> service = new ServiceConfig<DemoServiceImpl>();
     private ServiceConfig<DemoServiceImpl> service2 = new ServiceConfig<DemoServiceImpl>();
     private ServiceConfig<DemoServiceImpl> delayService = new ServiceConfig<DemoServiceImpl>();
+
+    private EventDispatcher eventDispatcher = EventDispatcher.getDefaultExtension();
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -115,6 +122,9 @@ public class ServiceConfigTest {
         delayService.setDelay(100);
 
         ConfigManager.getInstance().clear();
+
+        // remove all event listeners
+        eventDispatcher.removeAllEventListeners();
     }
 
     @AfterEach
@@ -124,7 +134,19 @@ public class ServiceConfigTest {
 
     @Test
     public void testExport() throws Exception {
+
+        AtomicReference reference = new AtomicReference();
+
+        eventDispatcher.addEventListener(new EventListener<ServiceConfigExportedEvent>() {
+            @Override
+            public void onEvent(ServiceConfigExportedEvent event) {
+                reference.set(event.getServiceConfig());
+            }
+        });
+
         service.export();
+
+        assertEquals(service, reference.get());
 
         assertThat(service.getExportedUrls(), hasSize(1));
         URL url = service.toUrl();
@@ -167,8 +189,32 @@ public class ServiceConfigTest {
     public void testUnexport() throws Exception {
         System.setProperty(Constants.SHUTDOWN_WAIT_KEY, "0");
         try {
+            AtomicReference reference = new AtomicReference();
+
+            eventDispatcher.addEventListener(new EventListener<ServiceConfigExportedEvent>() {
+                @Override
+                public void onEvent(ServiceConfigExportedEvent event) {
+                    reference.set(event.getServiceConfig());
+                }
+            });
+
             service.export();
+
+            assertEquals(service, reference.get());
+
+            assertTrue(reference.compareAndSet(service, null));
+
+            eventDispatcher.addEventListener(new EventListener<ServiceConfigUnExportedEvent>() {
+                @Override
+                public void onEvent(ServiceConfigUnExportedEvent event) {
+                    reference.set(event.getServiceConfig());
+                }
+            });
+
             service.unexport();
+
+            assertEquals(service, reference.get());
+
             Thread.sleep(1000);
             Mockito.verify(exporter, Mockito.atLeastOnce()).unexport();
         } finally {
